@@ -749,9 +749,175 @@ $climate-change-link-color: #bbbbbb;
           }
         }
       }
+    }
+
+    .responses {
+      
+      a.more {
+        font-size: 13px;
+        font-size: .8rem;
+        margin-left: 1em;
+        padding: .2em .7em;
+        border-left: 1px solid #596475;
+        display: inline-block;
+        zoom: 1;
+        *display: inline;
+      }
+    }
+
+    .responses h3.active, dl.keymessages.active dt {
+      cursor: pointer;
+      background-image: url(./?a=1260203);
+      background-repeat: no-repeat;
+      background-position: 2px 7px;
+      padding-left: 22px;
+    }
+
+    .responses h3.active.selected, dl.keymessages.active dt.selected {
+      background-image: url(./?a=1260204);
+    }
+
+    .responses {
+      border: 1px dashed #596475;
+      padding: 0 0 .5em;
+
+      h3 {
+        padding: 0 1em;
+
+        &.active {
+          padding-left: 40px;
+          background-position: 20px 7px;
+        }
+      }
+      
+      dl, div.dl {
+        padding: .5em;
+        margin: 0;
+        padding: .5em 1em;
+        margin: 0 0 1em;
+      }
+
+      dl dt, div.dl div.dt {
+        font: {
+          weight: normal;
+          size: 15px;
+          size: .9rem;
+        }
+        margin: 0 3px 0 0;
+        padding: .5em 0 .2em 0;
+        border-top: 1px solid #bbb;
+        width: 100%;
+      }
+
+      dl dd, div.dl div.dd {
+        margin: 0;
+        padding: .2em 0 .5em 0;
+        width: 100%;
+      }
+
+      dl dd p, div.dl div.dd p {
+        margin-top: 0;
+        margin-bottom: .7em;
+      }
+
+      dl dt:first-child, div.dl div.dt:first-child, dl dd:first-of-type, div.dl div.dd:first-of-type {
+        border-top: none;
+      }
 
     }
 
+    dl.keymessages dt {
+      font-size: 15px;
+      font-size: 1rem;
+    }
+  
+
+
+    dl.keymessages dd {
+      margin-left: 0;
+      margin-bottom: 1em;
+    }
+
+    .finding-criteria {
+      background: #efefef;
+      padding: .3em .6em;
+      margin: 1em 0;
+    }
+
+    table {
+      margin-left: auto;
+      margin-right: auto;
+      
+      caption {
+        color: #444;
+      }
+
+      thead th {
+        background: $border-blue;
+        color: white;
+        text-shadow: 1px 1px 1px rgba(0,0,0,0.7);
+        text-align: center;
+      }
+
+      tbody th[scope=row], tbody th[scope=rowgroup] {
+        background: #efefef;
+      }
+
+      &.assessment {
+        width: 100%;
+        margin-bottom: 2.5em;
+        border: none;
+        td, th {
+          border: none;
+        }
+        th {
+          background-color: #efefef;
+          color: #000;
+          text-shadow: 1px 1px 1px rgba(255,255,255,0.7);
+        }
+        td {
+          border-bottom: 1px solid #efefef;
+          text-align: center;
+          &:first-child {
+            text-align: left;
+          }
+        }
+        tr td:first-child {
+          @media (min-width: 43em) and (max-width: 65em) {
+            width: 25%;
+          }
+          @media (min-width: 65em) {
+            width: 35%;
+          }
+        }
+        p.grade {
+          display: block;
+          img {
+            margin: 0 auto;
+            width: 70%;
+            @media (min-width: 43em) {
+              width: auto;
+            }
+          }
+        }
+        .grade {
+          font-size: .7rem;
+          color: #444;
+          img {
+            display: block;
+          }
+        }
+        .confidence {
+          font-size: .7rem;
+          color: #444;
+          img {
+            vertical-align: middle;
+          }
+        }
+      }
+    }	  
+	  
+	  
     .indicatorlinks {
       padding: 0 1em;
       background: #efefef;
@@ -1492,7 +1658,7 @@ $climate-change-link-color: #bbbbbb;
       background: $biodiversity-link-color;
     }
     #content {
-      .programs {
+      .programs, .responses {
         border-color: $biodiversity-alpha-color;
         h3 {
           color: $biodiversity-theme-color;
@@ -1608,7 +1774,7 @@ $climate-change-link-color: #bbbbbb;
         background: $heritage-link-color;
       }
 
-      .programs {
+      .programs, .responses {
         border-color: $heritage-alpha-color;
         h3 {
           color: $heritage-theme-color;
@@ -1723,7 +1889,7 @@ $climate-change-link-color: #bbbbbb;
         background: $pollution-link-color;
       }
       
-      .programs {
+      .programs, .responses {
         border-color: $pollution-alpha-color;
         h3 {
           color: $pollution-theme-color;
@@ -1842,7 +2008,7 @@ $climate-change-link-color: #bbbbbb;
         background: $climate-link-color;
       }
 
-      .programs {
+      .programs, .responses {
         border-color: $climate-alpha-color;
         h3 {
           color: $climate-theme-color;
@@ -1960,7 +2126,7 @@ $climate-change-link-color: #bbbbbb;
         background: $biodiversity-link-color;
       }
 
-      .programs {
+      .programs, .responses {
         border-color: $human-settlements-alpha-color;
         h3 {
           color: $human-settlements-theme-color;
@@ -2277,7 +2443,7 @@ $climate-change-link-color: #bbbbbb;
 
 
 #content {
-  .programs {
+  .programs, .responses {
     table {
       margin: .5em 1em;
       border: {
@@ -2528,5 +2694,3 @@ body .section.col3 .topic {
     border-top: 1.6rem solid $climate-change-theme-color;
   }
 }
-
-
