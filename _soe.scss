@@ -678,8 +678,8 @@ $great-barrier-reef-link-color: #006A96;
     }
 
     table {
-      margin-left: auto;
-      margin-right: auto;
+      /*margin-left: auto;
+      margin-right: auto;*/
       
       caption {
         color: #444;
@@ -849,15 +849,15 @@ $great-barrier-reef-link-color: #006A96;
       }
     }
 
+    /* for 2019, we will style tables again */
     table.indicators {
-      min-width: 60%;
+      /*min-width: 60%;*/
       font-size: .8rem;
       td {
         text-align: left;
         &.num {
           text-align: right;
         }
-  
       }
     }
 
