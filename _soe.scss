@@ -2217,11 +2217,9 @@ $climate-change-link-color: #bbbbbb;
 
   body.soe-theme-great-barrier-reef {
     @media (min-width: 43em) {
-      body.soe-theme-great-barrier-reef {
-        background-image: url(./?a=1274111); // page-bg-great-barrier-reef.jpg
-      }
+      background-image: url(./?a=1274111); // page-bg-great-barrier-reef.jpg
     }
-        #content-container {
+    #content-container {
       background-image: url(./?a=1274122); // heading-bg-great-barrier-reef.png
     }
 
@@ -2286,11 +2284,9 @@ $climate-change-link-color: #bbbbbb;
 
   body.soe-theme-climate-change {
     @media (min-width: 43em) {
-      body.soe-theme-climate-change {
-        background-image: url(./?a=1449784); // page-bg-climate-change.jpg
-      }
+      background-image: url(./?a=1449784); // page-bg-climate-change.jpg
     }
-        #content-container {
+    #content-container {
       background-image: url(./?a=1274122); // heading-bg-great-barrier-reef.png TODO
     }
 
