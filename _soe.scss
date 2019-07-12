@@ -2061,7 +2061,7 @@ $great-barrier-reef-link-color: #006A96;
     
     #content {
       #headingDiv {
-        background-color: $great-barrier-alpha-theme-color;
+        background-color: $great-barrier-reef-alpha-theme-color;
       }
     }
   }
@@ -2099,6 +2099,76 @@ $great-barrier-reef-link-color: #006A96;
     color: $great-barrier-reef-theme-color;
   }
 
+	
+/* climate-change */
+
+  body.soe-theme-climate-change {
+    @media (min-width: 43em) {
+      body.soe-theme-climate-change {
+        background-image: url(./?a=1449784); // page-bg-climate-change.jpg
+      }
+    }
+        #content-container {
+      background-image: url(./?a=1274122); // heading-bg-climate-change.png TODO
+    }
+
+    #nav-section {
+      h2, h2 a {
+        background-color: $climate-change-theme-color;
+      }
+      li.current {
+        a, a:link, a:visited, a:hover, a:focus {
+          color: $climate-change-link-color;
+        }
+        ul li {
+          a, a:link, a:visited, a:hover, a:focus {
+            color: #444;
+          }
+        }
+      }
+    } 
+    
+    #content {
+      #headingDiv {
+        background-color: $climate-change-alpha-theme-color;
+      }
+    }
+  }
+  
+  #nav-site {
+    li.theme-climate-change {
+      &.current, &:hover {
+        background: $climate-change-theme-color;
+        background: linear-gradient($climate-change-theme-color, $climate-change-theme-color);
+      }
+    }
+    .theme-climate-change ul {
+      background: $climate-change-theme-color;
+      background: linear-gradient($climate-change-theme-color, $climate-change-theme-color);
+    }
+  }
+
+  #content .theme-climate-change h2, 
+  #fat-footer .theme-climate-change h3 {
+    border-bottom-color: $climate-change-theme-color;
+  }
+
+  #fat-footer .theme-climate-change h3 a {
+    background-image: url(./?a=1274110); // climate-change.png TODO
+  }
+
+  #content .themes .theme-climate-change ul, 
+  #fat-footer .theme-climate-change ul {
+    background-position: bottom right;
+    background-repeat: no-repeat;
+  }
+
+  #content .theme-section.theme-climate-change h2 a {
+    background-image: url(./?a=1274107); // climate-change.png TODO
+    color: $climate-change-theme-color;
+  }
+	
+	
 
 // social media icons
   
