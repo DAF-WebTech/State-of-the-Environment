@@ -17,10 +17,10 @@ $climate-link-color: #afbbe2;
 $human-settlements-theme-color: #82368C;
 $human-settlements-alpha-color: rgba(130,54,140,0.7);
 $great-barrier-reef-theme-color: #009fe3;
-$great-barrier-alpha-theme-color: rgba(44,172,227,0.7);
+$great-barrier-reef-alpha-color: rgba(44,172,227,0.7);
 $great-barrier-reef-link-color: #006A96;
 $climate-change-theme-color: #666666;
-$climate-change-alpha-theme-color: rgba(128,128,128,0.7);
+$climate-change-alpha-color: rgba(128,128,128,0.7);
 $climate-change-link-color: #bbbbbb;
 
 /* this comment is to test our webhook */
@@ -2243,7 +2243,7 @@ $climate-change-link-color: #bbbbbb;
     
     #content {
       #headingDiv {
-        background-color: $great-barrier-alpha-theme-color;
+        background-color: $great-barrier-reef-alpha-color;
       }
     }
   }
@@ -2287,7 +2287,7 @@ $climate-change-link-color: #bbbbbb;
   body.soe-theme-climate-change {
     @media (min-width: 43em) {
       body.soe-theme-climate-change {
-        background-image: url(./?a=1274111); // page-bg-great-barrier-reef.jpg
+        background-image: url(./?a=1449784); // page-bg-great-barrier-reef.jpg
       }
     }
         #content-container {
@@ -2312,7 +2312,7 @@ $climate-change-link-color: #bbbbbb;
     
     #content {
       #headingDiv {
-        background-color: $climate-change-alpha-theme-color;
+        background-color: $climate-change-alpha-color;
       }
     }
   }
