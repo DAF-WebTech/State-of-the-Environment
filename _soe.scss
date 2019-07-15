@@ -1,27 +1,36 @@
 $border-blue: #007eb1;
-$biodiversity-background-color: #6dbe45;
+
+$biodiversity-background-color: #6DBE45;
 $biodiversity-theme-color: #427429;
-$biodiversity-alpha-color: rgba(76,135,47,0.7);
-$biodiversity-link-color: #d5ecc9;
+$biodiversity-alpha-color: rgba(76, 135, 47, 0.7); // 4C 87 2F
+$biodiversity-link-color: #D5ECC9;
+
 $heritage-background-color: #ec2127;
 $heritage-theme-color: #c91117;
-$heritage-alpha-color: rgba(177,15,20,0.7);
+$heritage-alpha-color: rgba(177,15,20,0.7); // B1 0F 14
 $heritage-link-color: #fac5c7;
+
 $pollution-background-color: #f47b31;
 $pollution-theme-color: #b54b0a;
-$pollution-alpha-color: rgba(206,85,11,0.7);
+$pollution-alpha-color: rgba(206,85,11,0.7); // CE 55 0B
 $pollution-link-color: #fde8da;
+
+$climate-background-color: #3b53a4;
 $climate-theme-color: #3b53a4;
-$climate-alpha-color: rgba(39,55,108,0.7);
+$climate-alpha-color: rgba(39,55,108,0.7); // 27 37 6C
 $climate-link-color: #afbbe2;
+
 $human-settlements-theme-color: #82368C;
 $human-settlements-alpha-color: rgba(130,54,140,0.7);
+
 $great-barrier-reef-theme-color: #009fe3;
 $great-barrier-reef-alpha-color: rgba(44,172,227,0.7);
 $great-barrier-reef-link-color: #006A96;
-$climate-change-theme-color: #666666;
-$climate-change-alpha-color: rgba(128,128,128,0.7);
-$climate-change-link-color: #bbbbbb;
+
+$climate-change-background-color: #f3cb03;  /*icon colour*/
+$climate-change-theme-color: #796501; /* midway from icon color to black*/
+$climate-change-alpha-color: rgba(164, 136, 2, 0.7);
+$climate-change-link-color: #f9e581; /*midway from icon colour to white */
 
 /* this comment is to test our webhook */
 
@@ -1439,6 +1448,7 @@ $climate-change-link-color: #bbbbbb;
         border-bottom: 12px solid white;
       }
     }
+    
     a {
       text-decoration: none;
       &:hover {
@@ -1503,7 +1513,7 @@ $climate-change-link-color: #bbbbbb;
 
   div.home-themes2-climate {
     div.outer:hover {
-    background-color: $climate-theme-color;
+    background-color: $climate-background-color;
     }
     h2, li a   {
       color: $climate-theme-color !important;
@@ -1542,7 +1552,7 @@ $climate-change-link-color: #bbbbbb;
 
   div.home-themes2-climate-change {
     div.outer:hover {
-      background-color: $climate-change-theme-color;
+      background-color: $climate-change-background-color;
     }
     h2, li a  {
       color: $climate-change-theme-color !important;
@@ -1779,7 +1789,7 @@ $climate-change-link-color: #bbbbbb;
         h3 {
           color: $heritage-theme-color;
           a.more {
-            border-color: $pollution-background-color;
+            border-color: $heritage-background-color;
           }
           &.active {
             background-image: url(./?a=1260284); // arrow-right-heritage.png
@@ -1794,7 +1804,7 @@ $climate-change-link-color: #bbbbbb;
         dt {
           color: $heritage-theme-color;
           a.more {
-            border-color: $pollution-background-color;
+            border-color: $heritage-background-color;
           }
         }
         &.active {
@@ -1858,7 +1868,7 @@ $climate-change-link-color: #bbbbbb;
     }
   }
 
-  //pollution
+  /* pollution */
   body.soe-theme-pollution {
     @media (min-width: 43em) {
       background-image: url(./?a=1260408); // page-bg-pollution.jpg
@@ -1984,7 +1994,7 @@ $climate-change-link-color: #bbbbbb;
 
     #nav-section {
       h2, h2 a {
-        background-color: $climate-theme-color;
+        background-color: $climate-background-color;
       }
       li.current {
         a, a:link, a:visited, a:hover, a:focus {
@@ -2043,16 +2053,16 @@ $climate-change-link-color: #bbbbbb;
       }
 
       .findings h3, h3.criteria, p.criteria {
-        background-color: $climate-theme-color;
+        background-color: $climate-background-color;
       }
 
       .findings dl, .findings div.dl, .finding-text {
-        border-color: $climate-theme-color;
+        border-color: $climate-background-color;
       }
 
       .regionlinks {
         a.current, a.current:hover {
-          background-color: $climate-theme-color;
+          background-color: $climate-background-color;
         }
       }
     }
@@ -2062,16 +2072,18 @@ $climate-change-link-color: #bbbbbb;
     li.theme-climate {
       &.current, &:hover {
         background: $climate-theme-color;
+        background: linear-gradient($climate-theme-color,$climate-background-color);
       }
     }
     .theme-climate ul {
-      background: $climate-theme-color;
+      background: $climate-background-color;
+      background: linear-gradient($climate-background-color,$climate-theme-color);
     }
   }
 
   #content .theme-climate h2, 
   #fat-footer .theme-climate h3 {
-    border-bottom-color: $climate-theme-color;
+    border-bottom-color: $climate-background-color;
   }
 
   #fat-footer .theme-climate h3 a {
@@ -2291,7 +2303,7 @@ $climate-change-link-color: #bbbbbb;
 
     #nav-section {
       h2, h2 a {
-        background-color: $climate-change-theme-color;
+        background-color: $climate-change-background-color;
       }
       li.current {
         a, a:link, a:visited, a:hover, a:focus {
@@ -2316,18 +2328,18 @@ $climate-change-link-color: #bbbbbb;
     li.theme-climate-change {
       &.current, &:hover {
         background: $climate-change-theme-color;
-        background: linear-gradient($climate-change-theme-color, $climate-change-theme-color);
+        background: linear-gradient($climate-change-theme-color, $climate-change-background-color);
       }
     }
     .theme-climate-change ul {
-      background: $climate-change-theme-color;
-      background: linear-gradient($climate-change-theme-color, $climate-change-theme-color);
+      background: $climate-change-background-color;
+      background: linear-gradient($climate-change-background-color, $climate-change-theme-color);
     }
   }
 
   #content .theme-climate-change h2, 
   #fat-footer .theme-climate-change h3 {
-    border-bottom-color: $climate-change-theme-color;
+    border-bottom-color: $climate-change-background-color;
   }
 
   #fat-footer .theme-climate-change h3 a {
@@ -2675,7 +2687,7 @@ body .section.col3 .topic {
   }
 	
   .soe-theme-climate h1 {
-    border-top: 1.6rem solid $climate-theme-color;
+    border-top: 1.6rem solid $climate-background-color;
   }
 	
   .soe-theme-human-settlements h1 {
