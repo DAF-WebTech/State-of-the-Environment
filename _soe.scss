@@ -1424,7 +1424,6 @@ $climate-change-link-color: #bbbbbb;
 
 
   div.themes2 {
-    display:flex;
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
@@ -1433,7 +1432,7 @@ $climate-change-link-color: #bbbbbb;
       display: block;
     }
     
-    &>div {
+    & > div {
       width: 18%;
       @media (max-width: 43em) {
         width: 100%;
