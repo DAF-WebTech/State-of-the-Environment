@@ -16,23 +16,26 @@ $pollution-alpha-color: rgba(206,85,11,0.7); // CE 55 0B
 $pollution-link-color: #fde8da;
 
 $climate-background-color: #3b53a4;
-$climate-theme-color: #3b53a4;
+$climate-theme-color: #1D2952;
 $climate-alpha-color: rgba(39,55,108,0.7); // 27 37 6C
 $climate-link-color: #afbbe2;
 
-$human-settlements-theme-color: #82368C;
+$human-settlements-background-color: #82368C;
+$human-settlements-theme-color: #411B46;
 $human-settlements-alpha-color: rgba(130,54,140,0.7);
+$human-settlements-link-color: #C19BC6;
 
-$great-barrier-reef-theme-color: #009fe3;
+$great-barrier-reef-background-color: #009FE3;
+$great-barrier-reef-theme-color: #004F71; // midway from icon color to black
 $great-barrier-reef-alpha-color: rgba(44,172,227,0.7);
-$great-barrier-reef-link-color: #006A96;
+$great-barrier-reef-link-color: #80CFF1;
 
-$climate-change-background-color: #f3cb03;  /*icon colour*/
-$climate-change-theme-color: #796501; /* midway from icon color to black*/
-$climate-change-alpha-color: rgba(164, 136, 2, 0.7);
-$climate-change-link-color: #f9e581; /*midway from icon colour to white */
+$climate-change-background-color: #f3cb03;  //icon colour
+$climate-change-theme-color: #796501; // midway from icon color to black
+$climate-change-alpha-color: rgba(164, 136, 2, 0.7); // arbitrary, looks ok
+$climate-change-link-color: #f9e581; // midway from icon colour to white 
 
-/* this comment is to test our webhook */
+
 
 @media screen {
   #header, #header .box-sizing, #page-container, #nav-site, #footer {
@@ -1539,7 +1542,7 @@ $climate-change-link-color: #f9e581; /*midway from icon colour to white */
 
   div.home-themes2-great-barrier-reef {
     div.outer:hover {
-	    background-color: $great-barrier-reef-theme-color;
+	    background-color: $great-barrier-reef-background-color;
     }
     h2, li a   {
       color: $great-barrier-reef-theme-color !important;
@@ -1730,7 +1733,8 @@ $climate-change-link-color: #f9e581; /*midway from icon colour to white */
     }
   }
 
-  #content .theme-biodiversity h2, #fat-footer .theme-biodiversity h3 {
+  #content .theme-biodiversity h2, 
+  #fat-footer .theme-biodiversity h3 {
     border-bottom-color: $biodiversity-background-color;
   }
 
@@ -1738,7 +1742,8 @@ $climate-change-link-color: #f9e581; /*midway from icon colour to white */
     background-image: url(./?a=1260278); // biodiversity.png
     }
 
-  #content .themes .theme-biodiversity ul, #fat-footer .theme-biodiversity ul {
+  #content .themes .theme-biodiversity ul, 
+  #fat-footer .theme-biodiversity ul {
     background-position: bottom right;
     background-repeat: no-repeat;
   }
@@ -2113,7 +2118,7 @@ $climate-change-link-color: #f9e581; /*midway from icon colour to white */
 
     #nav-section {
       h2, h2 a {
-        background-color: $human-settlements-theme-color;
+        background-color: $human-settlements-background-color;
       }
 
       li.current {
@@ -2135,7 +2140,7 @@ $climate-change-link-color: #f9e581; /*midway from icon colour to white */
       }
 
       .indicatorlinks {
-        background: $biodiversity-link-color;
+        background: $human-settlements-link-color;
       }
 
       .programs, .responses {
@@ -2175,17 +2180,17 @@ $climate-change-link-color: #f9e581; /*midway from icon colour to white */
       .findings h3, 
       h3.criteria, 
       p.criteria {
-        background-color: $human-settlements-theme-color;
+        background-color: $human-settlements-background-color;
       }
     
       .findings dl, 
       .finding-text {
-        border-color: $human-settlements-theme-color;
+        border-color: $human-settlements-background-color;
       }
 
       .regionlinks {
         a.current, a.current:hover {
-        background-color: $human-settlements-theme-color;
+        background-color: $human-settlements-background-color;
       }
     }
     }
@@ -2195,16 +2200,20 @@ $climate-change-link-color: #f9e581; /*midway from icon colour to white */
     li.theme-human-settlements {
       &.current, &:hover {
         background: $human-settlements-theme-color;
+        background: linear-gradient($human-settlements-theme-color,$human-settlements-background-color);
+
       }
     }
     .theme-human-settlements ul {
-      background: $human-settlements-theme-color;
+      background: $human-settlements-background-color;
+      background: linear-gradient($human-settlements-background-color,$human-settlements-theme-color);
+
     }
   }
 
   #content .theme-human-settlements h2, 
   #fat-footer .theme-human-settlements h3 {
-    border-bottom-color: $human-settlements-theme-color;
+    border-bottom-color: $human-settlements-background-color;
   }
 
   #fat-footer .theme-human-settlements h3 a {
@@ -2236,11 +2245,11 @@ $climate-change-link-color: #f9e581; /*midway from icon colour to white */
 
     #nav-section {
       h2, h2 a {
-        background-color: $great-barrier-reef-theme-color;
+        background-color: $great-barrier-reef-background-color;
       }
       li.current {
         a, a:link, a:visited, a:hover, a:focus {
-          color: $great-barrier-reef-link-color;
+          color: $great-barrier-reef-theme-color;
         }
         ul li {
           a, a:link, a:visited, a:hover, a:focus {
@@ -2249,30 +2258,31 @@ $climate-change-link-color: #f9e581; /*midway from icon colour to white */
         }
       }
     } 
-    
-    #content {
-      #headingDiv {
-        background-color: $great-barrier-reef-alpha-color;
-      }
+    #headingDiv {
+      background-color: $great-barrier-reef-alpha-color;
     }
+    #content .indicatorlinks {
+      background: $great-barrier-reef-link-color;
+    }
+
   }
   
   #nav-site {
     li.theme-great-barrier-reef {
       &.current, &:hover {
         background: $great-barrier-reef-theme-color;
-        background: linear-gradient($great-barrier-reef-theme-color, $great-barrier-reef-theme-color);
+        background: linear-gradient($great-barrier-reef-theme-color, $great-barrier-reef-background-color);
       }
     }
     .theme-great-barrier-reef ul {
-      background: $great-barrier-reef-theme-color;
-      background: linear-gradient($great-barrier-reef-theme-color, $great-barrier-reef-theme-color);
+      background: $great-barrier-reef-background-color;
+      background: linear-gradient($great-barrier-reef-background-color, $great-barrier-reef-theme-color);
     }
   }
 
   #content .theme-great-barrier-reef h2, 
   #fat-footer .theme-great-barrier-reef h3 {
-    border-bottom-color: $great-barrier-reef-theme-color;
+    border-bottom-color: $great-barrier-reef-background-color;
   }
 
   #fat-footer .theme-great-barrier-reef h3 a {
@@ -2307,7 +2317,7 @@ $climate-change-link-color: #f9e581; /*midway from icon colour to white */
       }
       li.current {
         a, a:link, a:visited, a:hover, a:focus {
-          color: $climate-change-link-color;
+          color: $climate-change-theme-color;
         }
         ul li {
           a, a:link, a:visited, a:hover, a:focus {
@@ -2695,10 +2705,10 @@ body .section.col3 .topic {
   }
 	
   .soe-theme-great-barrier-reef h1 {
-    border-top: 1.6rem solid $great-barrier-reef-theme-color;
+    border-top: 1.6rem solid $great-barrier-reef-background-color;
   }
 	
   .soe-theme-climate-change h1 {
-    border-top: 1.6rem solid $climate-change-theme-color;
+    border-top: 1.6rem solid $climate-change-background-color;
   }
 }
