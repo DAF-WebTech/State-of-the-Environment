@@ -773,7 +773,7 @@ var soejs = {
 
 
     loadFindingData: function (populateIndicatorChartFunction) {
-        var url = String.format("/2019/datasets/indicator-{0}.csv", soejs.resourceId.replace(/\./g, "-"));
+        var url = String.format("/2020/datasets/indicator-{0}.csv", soejs.resourceId.replace(/\./g, "-"));
         Papa.parse(url, {
 	        download: true,
 	        header: true,
