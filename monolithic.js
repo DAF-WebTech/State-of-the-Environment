@@ -597,7 +597,13 @@ var soejs = {
         });
         
         google.maps.event.addListener(soejs.map, "maptypeid_changed", function() {
-            console.log ("maptypeid_changed", arguments);  
+            //console.log ("maptypeid_changed", arguments);  
+            if (soejs.map.mapTypeId == "satellite" || soejs.map.mapTypeId == "hybrid") {
+                console.log("show the custom control");
+            }
+            else {
+                console.log("don't show the custom control");
+            }
         });
     },//~ initialise
 
