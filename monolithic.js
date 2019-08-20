@@ -309,8 +309,32 @@ document.addEventListener("DOMContentLoaded", function() {
         	    soejs.selectPolyRegion(selected_region);
             });
         }
-
+        
     }//~ if populateIndicatorCharts
+
+    // make a div to hold a control to add to the map, 
+    // so that the satellite image can have an option to not show the regions
+    var colourControlDiv = document.createElement("div");
+    colourControlDiv.className = "infobox"
+    var colourControlCheckbox = document.createElement("input");
+    colourControlCheckbox.setAttribute("type", "checkbox");
+    colourControlCheckbox.setAttribute("checked", "checked");
+    colourControlCheckbox.setAttribute("id", "colourControlCheckbox");
+    colourControlCheckbox.addEventListener("change", function() {
+        // change the "opacity" of the polygon, 0 means you can see right through it
+        soejs.fillOpacity = this.checked ? 0.75 : 0; 
+        soejs.polygonArray.forEach(function(p) { 
+            p.set("fillOpacity", soejs.fillOpacity); 
+        });
+    });
+    colourControlDiv.appendChild(colourControlCheckbox);
+    var colourControlLable = document.createElement("label");
+    colourControlLable.setAttribute("for", "colourControlCheckbox");
+    colourControlLable.textContent = "Show regions";
+    colourControlDiv.appendChild(colourControlLable);
+    
+    soejs.colourControl = colourControlDiv;
+
 
 }); //~ end document ready
 
@@ -326,6 +350,7 @@ var soejs = {
     highlight_colour: "",
     highlightColour: "#5da23b", // set to biodiversity by default 
     highlightColourClickable: "#f7eb6f",
+    fillOpacity: 0.75,
     fillColour: "#6dbe45",
     regionColour: "#6dbe45",
     clickable: false,
@@ -336,7 +361,9 @@ var soejs = {
     thisFindingHasRegionTabs: true,
     markers: [],
     infoWindows: [],
+    colourControl: {},
     map_bounds: {},
+    showRegionColourFlag: false,
 
     
     fixDataTableFormat: function (dataTable, factor) //used on finding pages
@@ -519,7 +546,7 @@ var soejs = {
     				clickable: true,
     				strokeColor: "#CDCDCD",
     				fillColor: soejs.fillColour,
-    				fillOpacity: 0.75,
+    				fillOpacity: soejs.fillOpacity,
     				strokeOpacity: 0.5,
     				strokeWeight: 1.0,
     				map: soejs.map,
@@ -597,13 +624,21 @@ var soejs = {
         });
         
         google.maps.event.addListener(soejs.map, "maptypeid_changed", function() {
-            //console.log ("maptypeid_changed", arguments);  
-            if (soejs.map.mapTypeId == "satellite" || soejs.map.mapTypeId == "hybrid") {
-                console.log("show the custom control");
+            if (soejs.map.mapTypeId == "satellite" || soejs.map.mapTypeId == "hybrid" ) {
+                if (!soejs.showRegionColourFlag) {
+                	soejs.map.controls[google.maps.ControlPosition.TOP_CENTER].push(soejs.colourControl);
+                	soejs.showRegionColourFlag = true;
+                }
             }
             else {
-                console.log("don't show the custom control");
+            	soejs.map.controls[google.maps.ControlPosition.TOP_CENTER].pop(soejs.colourControl);
+            	soe.js.fillOpacity = 0.75;
+            	soejs.showRegionColourFlag = false;
             }
+            soejs.polygonArray.forEach(function(p) { 
+                p.set("fillOpacity", soejs.fillOpacity); 
+            });
+
         });
     },//~ initialise
 
@@ -820,7 +855,7 @@ var soejs = {
     			//not good, special case because this is the only table that is actually too wide.
     			// not sure what we're going to do when more and more tables come into this category.
     			// probably scrap all the code and rewrite.
-    			    // for 2019, don't do anything yet at first
+    			    // for 2020, don't do anything yet at first
                     // test all table look and feel 
                     // and find better ways of doing all this.
     
