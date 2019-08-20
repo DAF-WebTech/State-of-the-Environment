@@ -364,8 +364,35 @@ var soejs = {
     colourControl: {},
     map_bounds: {},
     showRegionColourFlag: false,
-
     
+    getColumnChartDefaultOptions: function() {
+        // these are cut down version, do we need to add anything
+        return  { 
+            hAxis: {
+                title: "" // always need this
+            },
+            height: 400,
+            showTip: true,
+            vAxis: {
+                title: "" // always need this
+            },
+            width: "100%",
+        };
+    },
+    
+    getPieChartDefaultOptions: function() {
+        return {
+            chartArea: {
+                width: "80%",
+                height: "80%"
+            },
+            height: 250,
+            is3D: true,
+            showTip: true,
+            width: "100%",
+        };
+    },
+
     fixDataTableFormat: function (dataTable, factor) //used on finding pages
     {
         if (!factor)
