@@ -365,32 +365,40 @@ var soejs = {
     map_bounds: {},
     showRegionColourFlag: false,
     
-    getColumnChartDefaultOptions: function() {
+    getDefaultColumnChartOptions: function() {
         // these are cut down version, do we need to add anything
         return  { 
             hAxis: {
-                title: "" // always need this
+                title: "Year", // always need this
+                titleTextStyle: {italic: false}
             },
             height: 400,
             showTip: true,
             vAxis: {
-                title: "" // always need this
+                title: "", // always need this
+                titleTextStyle: {italic: false}
             },
             width: "100%",
         };
     },
     
-    getPieChartDefaultOptions: function() {
+    getDefaultPieChartOptions: function() {
         return {
             chartArea: {
                 width: "80%",
                 height: "80%"
             },
             height: 250,
-            is3D: true,
+            //is3D: true,
             showTip: true,
             width: "100%",
         };
+    },
+    
+    getDefaultLineChartOptions: function() {
+      var retVal = this.getDefaultColumnChartOptions();
+      retVal.pointSize = 3;
+      return retVal;
     },
 
     fixDataTableFormat: function (dataTable, factor) //used on finding pages
@@ -821,15 +829,6 @@ var soejs = {
     },//~selectPinRegion
 
 
-    /*doesnt' seem to be used*/ decodeLevels: function(encodedLevelsString) {
-    	var decodedLevels = [];
-    	for (var i = 0; i < encodedLevelsString.length; ++i) {
-    		var level = encodedLevelsString.charCodeAt(i) - 63;
-    		decodedLevels.push(level);
-    	}
-    	return decodedLevels;
-    },//~decodeLevels
-
 
     codify: function(strvar) {
     	var strcode = strvar.replace(/\s/g, '-');
@@ -841,34 +840,40 @@ var soejs = {
 
 
     loadFindingData: function (populateIndicatorChartFunction) {
-        var url = String.format("/2020/datasets/indicator-{0}.csv", soejs.resourceId.replace(/\./g, "-"));
-        Papa.parse(url, {
-	        download: true,
-	        header: true,
-	        skipEmptyLines: true,
-	        complete: function(results) {
-                soejs.findingPageData = results;
-                google.charts.setOnLoadCallback(populateIndicatorChartFunction);
-	        },
-	        error: function(error, file) {
-	            console.log("findLoadingData error: ", url, error, file);
-	        }
-        });
+        if (soejs.hasInlineData) {
+            google.charts.setOnLoadCallback(populateIndicatorChartFunction);
+        }
+        else {
+
+            var url = String.format("/2020/datasets/indicator-{0}.csv", soejs.resourceId.replace(/\./g, "-"));
+            Papa.parse(url, {
+    	        download: true,
+    	        header: true,
+    	        skipEmptyLines: true,
+    	        complete: function(results) {
+                    soejs.findingPageData = results;
+                    google.charts.setOnLoadCallback(populateIndicatorChartFunction);
+    	        },
+    	        error: function(error, file) {
+    	            console.log("findLoadingData error: ", url, error, file);
+    	        }
+            });
+        }
     },//~loadFindingData
     
     
-    chartsLoaded: function(parentElement) {
+    // legacy, from 2015 and 2017
+    chartsLoaded: function() {
+        this.chartsLoaded2();
+        
     	// Called each time a chart is loaded.
     	// Checks whether it's the last one to load. If it is, hides all but Qld ones.
     	// Need to wait until all are loaded because charts don't draw corectly if hidden.
     
     	soejs.num_charts_loaded++;
     	if (soejs.num_charts_loaded == soejs.num_charts) {
-    	    parentElement = parentElement || ""; //TODO add parent element to selectors
     	    
-    		// Hide all but Qld
-    		$('.region-info').not('.region-queensland').hide();
-    
+	    
     		// Highlight Qld/first
     		$('.regionlinks a:first').addClass('current');
     
@@ -879,27 +884,76 @@ var soejs = {
     			$(this).prepend('<ul><li class="chart"><a href="#chart_' + group_num + '">Chart</a></li><li class="table"><a href="#table_' + group_num + '">Table</a></li></ul>');
     			$(this).tabs();
     			
-    			//not good, special case because this is the only table that is actually too wide.
-    			// not sure what we're going to do when more and more tables come into this category.
-    			// probably scrap all the code and rewrite.
-    			    // for 2020, don't do anything yet at first
-                    // test all table look and feel 
-                    // and find better ways of doing all this.
-    
-//    			if (soejs.resourceId == "1.1.0.11.1") {
-//    			    $("div#chartgroup_0").tabs({activate: function(event, ui) {
-//    			        if (ui.newTab[0].innerText == "Table")
-//    			            soejs.setContentTableStyles();
-//    			    }});
-//    			}
     		});
     		
-    		soejs.setContentTableStyles();
     		
-    		// reset these values because they need to be reused by the multi-indicator pages
-    		soejs.num_charts_loaded = soejs.num_charts = 0;
+    		// i don't know why this is necessary, but the charts with vue and bioregion maps
+    		// were failing to draw correctly, so this fixed it
+    		window.setTimeout(function(){
+                // Hide all but Qld
+    		    $(".region-info").not(".region-queensland").hide();
+
+    		    // hide any marked with initial-hide
+    		    $(".initial-hide").hide(); 
+    		}, 100);
+
+
     	}
     }, //~ chartsLoaded
+
+
+    // for 2020
+    chartsLoaded2: function() {
+    	// Called each time a chart is loaded.
+    	// Checks whether it's the last one to load. If it is, hides all but Qld ones.
+    	// Need to wait until all are loaded because charts don't draw corectly if hidden.
+    
+    	soejs.num_charts_loaded++;
+    	if (soejs.num_charts_loaded == soejs.num_charts) {
+    	    
+    		// Highlight Qld/first
+    		$('.regionlinks a:first').addClass('current');
+
+            // add our tabs to each chart/table group
+    		document.querySelectorAll("div.chart-table").forEach(function(chartTable) {
+                var indicatorNumber = chartTable.getAttribute("id").split("_")[1];
+                var chartGroup = chartTable.parentNode;
+                
+                // add list items to be our tab headings
+                chartTable.insertAdjacentHTML("beforeBegin", "<ul class=chart-tabs id=chartTabs" + indicatorNumber + "><li class=active><span>Chart</span><li><span>Table</span></ul>");
+                
+                var ul = chartGroup.querySelector("ul"); // the one we just inserted
+                var listItems = ul.querySelectorAll("li");
+                listItems.forEach(function(li) { //add event listener to each li element
+                    li.addEventListener("click", function() {
+                       // get each tab heading element, and toggle active class
+                       listItems.forEach(function(thisItem){
+                           thisItem.classList.toggle("active");
+                       });
+                       
+                       // get the chart and the table, and toggle active class
+                       chartTable.querySelector("#chart_" + indicatorNumber).classList.toggle("inactive");
+                       chartTable.querySelector("#table_" + indicatorNumber).classList.toggle("inactive");
+                        
+                    });
+                });
+                
+                var chartDiv = chartTable.querySelector("div#table_" + indicatorNumber)
+                chartDiv.classList.add("inactive"); // chart visible by default
+    		});
+    		
+    		// i don't know why it became necessary to use window.setTimeout, 
+    		// but the charts with vue and bioregion maps
+    		// were failing to draw correctly, so this fixed it
+    		window.setTimeout(function(){
+                // Hide all but Qld
+    		    $(".region-info").not(".region-queensland").hide();
+
+    		    // hide any marked with initial-hide
+    		    $(".initial-hide").hide(); 
+    		}, 100);
+    	}
+    }, //~ chartsLoaded2
 
 
     showHideRegionInfo: function(selected_region) {
