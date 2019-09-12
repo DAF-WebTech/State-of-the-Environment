@@ -279,7 +279,22 @@ document.addEventListener("DOMContentLoaded", function() {
         
     soejs.clickable = ($(".regiontabs").length == 0) ? false : true;
     soejs.highlight_colour = (!soejs.clickable) ? soejs.highlightColour : soejs.highlightColourClickable;
-    $('.regiontabs').tabs();
+    
+    var tabHeaders = document.querySelectorAll("ul.regionlink-tabs li");
+    tabHeaders.forEach(function(tabHeader) {
+       tabHeader.addEventListener("click", function() {
+           tabHeaders.forEach(function(myTabHeader) {
+               myTabHeader.classList.toggle("active");
+           });
+           document.querySelectorAll("div.map-list > div").forEach(function(tabContent) {
+               tabContent.classList.toggle("inactive");
+           });
+       }); 
+    });
+    
+    
+    
+    //$('.regiontabs').tabs();
     
     if (window.populateIndicatorCharts) { // it's a finding page
         soejs.loadFindingData(populateIndicatorCharts);
@@ -306,7 +321,8 @@ document.addEventListener("DOMContentLoaded", function() {
         	    // Get the selected region from the anchor link
         	    var selected_region = $(this).attr('href');
         	    selected_region = selected_region.substr(1); // remove '#' part of anchor to get class name
-        	    soejs.selectPolyRegion(selected_region);
+        	    //old soejs.selectPolyRegion(selected_region);
+        	    soejs.selectFunction(selected_region);
             });
         }
         
@@ -364,7 +380,7 @@ var soejs = {
     colourControl: {},
     map_bounds: {},
     showRegionColourFlag: false,
-    
+
     getDefaultColumnChartOptions: function() {
         // these are cut down version, do we need to add anything
         return  { 
@@ -531,6 +547,8 @@ var soejs = {
     
     
     initialisePoly: function() {
+        
+        soejs.selectFunction = soejs.selectPolyRegion;
 
         var mapCanvas = document.getElementById('map-canvas');
         if (!mapCanvas)
@@ -678,6 +696,9 @@ var soejs = {
     },//~ initialise
 
     initialisePin: function() {
+        
+        soejs.selectFunction = soejs.selectPinRegion;
+        
         var infowindow = new google.maps.InfoWindow();
         var centre_latlng = new google.maps.LatLng(-21,146);
         var mapOptions = {
@@ -793,6 +814,7 @@ var soejs = {
 
     // function when region has been selected outside the map (i.e. from the list of region links)
     selectPolyRegion: function (region_code) {
+
     	if (region_code === 'region-queensland' || region_code === undefined) {
     		// reset to default region (Qld)
     		soejs.showSelectedRegion(region_code);
@@ -812,6 +834,7 @@ var soejs = {
     
     
     selectPinRegion: function(region_code) {
+        
         if (region_code==='region-queensland') {
             infoWindows[0].close();
             soejs.showHideRegionInfo(region_code);
@@ -864,7 +887,7 @@ var soejs = {
     
     // legacy, from 2015 and 2017
     chartsLoaded: function() {
-        this.chartsLoaded2();
+        soejs.chartsLoaded2();
         
     	// Called each time a chart is loaded.
     	// Checks whether it's the last one to load. If it is, hides all but Qld ones.
@@ -873,10 +896,9 @@ var soejs = {
     	soejs.num_charts_loaded++;
     	if (soejs.num_charts_loaded == soejs.num_charts) {
     	    
-	    
     		// Highlight Qld/first
     		$('.regionlinks a:first').addClass('current');
-    
+
     		/* Add tabs to each chart group (chart/table) */
     		$('.chart-table').each(function() {
     			var group_num = $(this).attr('id').substr(11); // string after 'region-info-'
@@ -890,11 +912,13 @@ var soejs = {
     		// i don't know why this is necessary, but the charts with vue and bioregion maps
     		// were failing to draw correctly, so this fixed it
     		window.setTimeout(function(){
+
                 // Hide all but Qld
     		    $(".region-info").not(".region-queensland").hide();
 
     		    // hide any marked with initial-hide
     		    $(".initial-hide").hide(); 
+    		    
     		}, 100);
 
 
@@ -911,8 +935,11 @@ var soejs = {
     	soejs.num_charts_loaded++;
     	if (soejs.num_charts_loaded == soejs.num_charts) {
     	    
-    		// Highlight Qld/first
-    		$('.regionlinks a:first').addClass('current');
+    		// Highlight either queensland or the region in the URL
+			var myRegion = window.location.hash || "#region-queensland";
+    		var regionLink = document.querySelector(String.format("a[href='{0}']", myRegion));
+    		if (regionLink)
+    			regionLink.classList.add("current");
 
             // add our tabs to each chart/table group
     		document.querySelectorAll("div.chart-table").forEach(function(chartTable) {
@@ -946,11 +973,15 @@ var soejs = {
     		// but the charts with vue and bioregion maps
     		// were failing to draw correctly, so this fixed it
     		window.setTimeout(function(){
-                // Hide all but Qld
-    		    $(".region-info").not(".region-queensland").hide();
+
+                // Hide all but queensland or else the region from the URL hash
+    		    myRegion = myRegion.substring(1);
+    		    $(".region-info").not("." + myRegion).hide();
+    		    soejs.selectFunction(myRegion);
 
     		    // hide any marked with initial-hide
     		    $(".initial-hide").hide(); 
+    		     
     		}, 100);
     	}
     }, //~ chartsLoaded2
@@ -970,6 +1001,8 @@ var soejs = {
         }
     
         $('.'+selected_region).show();
+    	window.location.hash = selected_region;
+
     
         // Show that this is the selected region
         $('.regionlinks a').removeClass('current');
