@@ -129,68 +129,6 @@ if (typeof Object.assign != 'function') {
 // some code to run at startup
 document.addEventListener("DOMContentLoaded", function() {
 
-    // toggle key messages visibility subtheme pages
-    if ($('dl.keymessages dt').length > 1) {
-        $('dl.keymessages').addClass('active');
-        $('dl.keymessages dd').hide();
-        $('dl.keymessages dt').on("click", function(event) {
-            event.preventDefault();
-            var me = $(this);
-            
-            if (me.hasClass("selected")) {
-                me.removeClass("selected");
-                me.next('dd').slideUp().addClass('screen-hidden');
-                me.find("a.more").text("show details…");
-            }
-            else {
-                me.addClass("selected");
-                me.next('dd').slideDown().removeClass('screen-hidden');
-                me.find("a.more").text("hide details…");
-            }
-            
-        });
-    }
-
-    
-    //toggle programs visibility on sub-theme
-    var show_link = '<a href="#" class="more">show programs</a>';
-    $('div.programs dl, div.programs table').hide().addClass('screen-hidden');
-    $('div.programs h3').append(show_link).addClass('active');
-    $('div.programs h3').on("click", function(event) {
-        event.preventDefault();
-        var me = $(this);
-        var prog_list = me.parent('div').find('dl, table');
-        if (prog_list.hasClass('screen-hidden')) {
-            prog_list.slideDown().removeClass('screen-hidden');
-            me.addClass('selected');
-            me.find('a.more').text('hide programs');
-        } else {
-            prog_list.slideUp().addClass('screen-hidden');
-            me.removeClass('selected');
-            me.find('a.more').text('show programs');
-        }
-    });
-    
-    //toggle responses visibility on theme
-    var show_link = '<a href="#" class="more">show responses</a>';
-    $('div.responses dl, div.responses table').hide().addClass('screen-hidden');
-    $('div.responses h3').append(show_link).addClass('active');
-    $('div.responses h3').on("click", function(event) {
-        event.preventDefault();
-        var me = $(this);
-        var prog_list = me.parent('div').find('dl, table');
-        if (prog_list.hasClass('screen-hidden')) {
-            prog_list.slideDown().removeClass('screen-hidden');
-            me.addClass('selected');
-            me.find('a.more').text('hide responses');
-        } else {
-            prog_list.slideUp().addClass('screen-hidden');
-            me.removeClass('selected');
-            me.find('a.more').text('show responses');
-        }
-    });
-    
-
     if (window.location.pathname.indexOf("/heritage/") >= 0)
     {
         soejs.highlightColour = "#c91c21";
@@ -220,8 +158,8 @@ document.addEventListener("DOMContentLoaded", function() {
         soejs.regionColour = "#82368c";
     }
         
-    soejs.clickable = ($(".regiontabs").length == 0) ? false : true;
-    soejs.highlight_colour = (!soejs.clickable) ? soejs.highlightColour : soejs.highlightColourClickable;
+    soejs.clickable = document.querySelectorAll(".regiontabs").length > 0;
+    soejs.highlight_colour = soejs.clickable ? soejs.highlightColourClickable : soejs.highlightColour;
     
     var tabHeaders = document.querySelectorAll("ul.regionlink-tabs li");
     tabHeaders.forEach(function(tabHeader) {
@@ -238,31 +176,37 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (window.populateIndicatorCharts) { // it's a finding page
         soejs.loadFindingData(populateIndicatorCharts);
-    
-        $('.region-info').each(function() {
-            if(!$(this).hasClass('region-queensland')) {
-        	    soejs.only_qld_flag = false;
-        	    return false;
-            }
-        });
 
-        if ($('.region-info').length > 2) { // text and graph
+        var regionInfos = document.querySelectorAll(".region-info");
+        for(var i = 0; i < regionInfos.length; ++i) {
+            if (!regionInfos[i].classList.contains("region-queensland")) {
+        	    soejs.only_qld_flag = false;
+        	    break;
+            }
+        }    
+
+        if (regionInfos.length > 2) { // text and graph
         
-            if ($('.chart').length == 0) {
+            if (document.querySelectorAll(".chart").length == 0) {
         	    // Don't need to wait for charts to load, just hide the non Qld sections
-        	    $('.region-info').not('.region-queensland').hide();
-        	    $('.regionlinks a:first').addClass('current');
+        	    var hideThese = document.querySelectorAll(".region-info:not(.region-queensland)");
+        	    hideThese.forEach(function(div) {
+        	       div.style.display = "none"; 
+        	    });
+        	    
+        	    document.querySelector(".regionlinks a:first").classList.add("current");
             }
         
             // Watch for region clicks
-            $('.regionlinks a').on("click", function(e) {
-        	    e.preventDefault();
+            document.querySelectorAll(".regionlinks a").forEach(function(a) {
+                a.addEventListener("click", function(e) {
+        	        e.preventDefault();
         
-        	    // Get the selected region from the anchor link
-        	    var selected_region = $(this).attr('href');
-        	    selected_region = selected_region.substr(1); // remove '#' part of anchor to get class name
-        	    //old soejs.selectPolyRegion(selected_region);
-        	    soejs.selectFunction(selected_region);
+        	        // Get the selected region from the anchor link
+        	        var selected_region = this.getAttribute("href");
+        	        selected_region = selected_region.substring(1); // remove '#' part of anchor to get class name
+        	        soejs.selectFunction(selected_region);
+                }); 
             });
         }
         
@@ -320,6 +264,7 @@ var soejs = {
     colourControl: {},
     map_bounds: {},
     showRegionColourFlag: false,
+
 
     getDefaultColumnChartOptions: function() {
         // these are cut down version, do we need to add anything
@@ -379,113 +324,8 @@ var soejs = {
       return formattedData;
     },
 
-    // Manage wide table display - on resize
-    // (scroller borrowed from QGov)
-    tableManage: function () { //used on finding pages
-    
-    
-    return;
-    // for 2019, don't do anything yet at first
-    // test all table look and feel 
-    // and find better ways of doing all this.
 
-    
-        // NOTE: this timeout fixes a bug with the width() values returned in IE8
-        // http://stackoverflow.com/a/10170769
-        setTimeout(function() {
-            var content_width = $('#content .article .box-sizing').width();
-            $('table').each(function(index) {
 
-                // Apply special style to tables that are wider than the content area
-                if ($(this).width() > (content_width + 1)) {  // IE bug? table width always 1px wider than content width. + 1 seems to fix
-                    $(this).addClass('widetable');
-                    // Strip manually added strong tags - they prevent widetable styles working as well as they should.
-                    $(this).find('th').each(function() {
-                        if ($(this).find('strong').length != 0) {
-                            $(this).find('strong').contents().unwrap();
-                        }
-                    });
-                    // Strip any set widths
-                    $(this).find('th[width], td[width]').removeAttr('width');
-    
-                } else {
-                    $(this).removeClass('widetable');
-                }
-    
-                // If still not narrow enough, add scroller
-                var isScrollable = $(this).parent().parent().hasClass('scrollable');
-                if ($(this).width() > (content_width + 1)) {
-                    if (!isScrollable) {
-                        $(this).wrap('<div class="scrollable"/>').wrap('<div class="inner"/>');
-                    }
-                } else {
-                    if (isScrollable) { // remove div.scrollable > div.inner wrappers
-                        $(this).unwrap().unwrap();
-                    }
-                }
-            });
-        }, 0 );
-    },
-
-    setContentTableStyles: function() { //used on finding pages
-    
-    
-    return;    
-    // for 2019, don't do anything yet at first
-    // test all table look and feel 
-    // and find better ways of doing all this.
-
-    
-    
-        if ($('#content table').length != 0) {
-    
-            $('#content table').each(function() {
-                var this_table = $(this);
-                // Apply special style to tables where table heading cells are down side instead of across top
-                this_table.find('th').first(function() {
-                    if ($(this).attr('scope') == 'row') {
-                        this_table.addClass('acrosstable');
-                    }
-                });
-    
-                // Apply special style to tables containing only number cells
-                var is_numeric = true;
-                this_table.find('tbody td').each(function() {
-                    var filtered_text = $(this).text();
-                    filtered_text = filtered_text.replace(',','');
-                    filtered_text = filtered_text.replace('-','');
-                    filtered_text = filtered_text.replace('&#8211;','');
-                    filtered_text = filtered_text.replace('&ndash;','');
-                    filtered_text = filtered_text.replace('$','');
-                    filtered_text = filtered_text.replace(' ','');
-                    if (isNaN(filtered_text) && filtered_text.toLowerCase() != 'n/a') {
-                        is_numeric = false;
-                    }
-                });
-                if (is_numeric) {
-                    this_table.addClass('numeric');
-                }
-            }); // end each table
-    
-            // Zebra table
-            $('table.zebra tbody tr:odd').addClass('even'); /* zero-indexed rows, hence ":odd" selector */
-    
-            // Sortable table
-            $('table.sort').tablesorter({dateFormat: "uk"});
-    
-            // Sortable zebra table
-            $("table.zebrasort").tablesorter({dateFormat: 'uk', widgets: ['zebra']});
-    
-    
-            soejs.tableManage();
-            $(window).on("resize", function() {
-                soejs.tableManage();
-            });
-    
-        } // end if tables exist
-    },
-    
-    
     initialisePoly: function() {
         
         soejs.selectFunction = soejs.selectPolyRegion;
@@ -574,7 +414,7 @@ var soejs = {
     
     			// Watch for clicking on region
     			google.maps.event.addListener(setRegion, 'click', function (event) {
-    				if ($("." + this.id).length || location.href.indexOf("/about/search") >= 0) {
+    				if (document.querySelectorAll("." + this.id).length || location.href.indexOf("/about/search") >= 0) {
     					soejs.showSelectedRegion(this.id, this.regionname);
     					soejs.showHideRegionInfo(this.id);
     					soejs.last_id_selected = this.id;
@@ -684,7 +524,7 @@ var soejs = {
             soejs.map_bounds.extend(location);
 
             google.maps.event.addListener(thisMarker, 'click', function() {
-                if($("." + this.id).length){
+                if(document.querySelectorAll("." + this.id).length) {
                     soejs.showHideRegionInfo(this.id);
                 }
                 infowindow.setContent(this.html);
@@ -827,7 +667,8 @@ var soejs = {
     
     // legacy, from 2015 and 2017
     chartsLoaded: function() {
-        soejs.chartsLoaded2();
+        chartsLoaded2();
+        return;
         
     	// Called each time a chart is loaded.
     	// Checks whether it's the last one to load. If it is, hides all but Qld ones.
@@ -916,12 +757,16 @@ var soejs = {
 
                 // Hide all but queensland or else the region from the URL hash
     		    myRegion = myRegion.substring(1);
-    		    $(".region-info").not("." + myRegion).hide();
+    		    document.querySelectorAll(String.format(".region-info:not(.{0})", myRegion)).forEach(function (region) {
+    		        region.style.display = "none";
+    		    });
     		    if (soejs.thisFindingHasRegionTabs)
     		        soejs.selectFunction(myRegion);
 
     		    // hide any marked with initial-hide
-    		    $(".initial-hide").hide(); 
+    		    document.querySelectorAll(".initial-hide").forEach(function(region) {
+    		        region.style.display = "none";
+    		    });
     		     
     		}, 100);
     	}
@@ -934,20 +779,26 @@ var soejs = {
         }
     
         // Hide all the region infos
-        $('.region-info').hide();
-    
+        document.querySelectorAll(".region-info").forEach(function(regionInfo) {
+            regionInfo.style.display = "none";
+        });
+
+
         // Check we have a valid region class name (should be 'region-' followed by region code)
         if (selected_region.substr(0,7) != 'region-') {
     	    selected_region = 'region-' + selected_region;
         }
     
-        $('.'+selected_region).show();
+        document.querySelector("." + selected_region).style.display = "block";
     	window.location.hash = selected_region;
 
     
         // Show that this is the selected region
-        $('.regionlinks a').removeClass('current');
-        $('.regionlinks a[href="#' + selected_region + '"]').addClass('current');
+        document.querySelectorAll(".regionlinks a").forEach(function(regionLink) {
+            regionLink.classList.remove("current");
+        });
+        
+        document.querySelector(String.format(".regionlinks a[href='#{0}']", selected_region)).classList.add("current");
     }
 
 };
