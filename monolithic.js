@@ -125,67 +125,10 @@ if (typeof Object.assign != 'function') {
 //~ end helpers
 
 
-// set the print link URLs
-if(typeof jQuery != "undefined") {
-    $.fn.printLinkURLs = function() {
-        var printLinkMaxURLLength = 200;
-        $(this).filter("a").each(function() {
-            var linkHref = this.href;
-            if (linkHref.length > printLinkMaxURLLength) {
-                linkHref = this.protocol + "//" + this.hostname;
-            }
-            $(this).after('<small class="print-link-url"> ( ' + linkHref + " )</small>");
-        });
-    }
-}
-$(function() {
-    $("#content-container a[href], #footer a").not("#breadcrumbs a, .page-options a, #fat-footer a, .image-gallery li a").printLinkURLs();
-});
-
 
 // some code to run at startup
 document.addEventListener("DOMContentLoaded", function() {
 
-    // **** Track PDFs in Google Analytics ****
-    $("#page-container a[href^='\/']").each(function(index) {
-      var filepath = $(this).attr('href');
-      var ext = filepath.substr(filepath.lastIndexOf('.'));
-      var options = " {'page': '" + filepath + "', 'nonInteraction': 0}";
-    
-      var on_click = '';
-      if (ext == '.pdf') {
-        on_click = "ga('send', 'event', 'PDF', 'Download', " + options + "); ga('send', 'pageview', '" + filepath +"');";
-      } else if (ext == '.doc' || ext == 'docx') {
-        on_click = "ga('send', 'event', 'Doc', 'Download', " + options + "); ga('send', 'pageview', '" + filepath +"');";
-      } else if (ext == '.xls' || ext == '.xlsx') {
-        on_click = "ga('send', 'event', 'Excel', 'Download', " + options + "); ga('send', 'pageview', '" + filepath +"');";
-      }
-      if (on_click != '') {
-        $(this).attr("onClick", on_click);
-      }
-    });
-
-
-    // ******  Links to external sites and RSS feeds *****
-    var ext_img = '<img src="https://www.stateoftheenvironment.des.qld.gov.au/__data/assets/image/0020/1260605/externallink.gif" alt="External link icon" class="linkicon" />'; //externallink.gif
-    var rss_img = '<img src="https://www.stateoftheenvironment.des.qld.gov.au/__data/assets/image/0003/1260606/feed-icon.gif" alt="RSS feed icon" class="linkicon" />'; //feed-icon.gif
-    $('#content-container a[href]').each(function() {
-        var elem = $(this);
-        if (elem.parents('.page-options').length != 0 || elem.parents('.socialmedia').length != 0 || "fancybox" in this.dataset) 
-            return;
-        var href = elem.attr("href");
-        if (href.indexOf("stateoftheenvironment") >= 0)
-            return;
-        if (href.indexOf(".") == 0
-                || href.indexOf("/") == 0
-                || href.indexOf("?") == 0
-                || href.indexOf("#") == 0 )
-            return;
-    
-        elem.attr("target", "_blank");
-        $(ext_img).insertAfter(elem);
-    });
-    
     // toggle key messages visibility subtheme pages
     if ($('dl.keymessages dt').length > 1) {
         $('dl.keymessages').addClass('active');
@@ -292,10 +235,7 @@ document.addEventListener("DOMContentLoaded", function() {
        }); 
     });
     
-    
-    
-    //$('.regiontabs').tabs();
-    
+
     if (window.populateIndicatorCharts) { // it's a finding page
         soejs.loadFindingData(populateIndicatorCharts);
     
@@ -977,7 +917,8 @@ var soejs = {
                 // Hide all but queensland or else the region from the URL hash
     		    myRegion = myRegion.substring(1);
     		    $(".region-info").not("." + myRegion).hide();
-    		    soejs.selectFunction(myRegion);
+    		    if (soejs.thisFindingHasRegionTabs)
+    		        soejs.selectFunction(myRegion);
 
     		    // hide any marked with initial-hide
     		    $(".initial-hide").hide(); 
