@@ -194,7 +194,7 @@ document.addEventListener("DOMContentLoaded", function() {
         	       div.style.display = "none"; 
         	    });
         	    
-        	    document.querySelector(".regionlinks a:first").classList.add("current");
+        	    document.querySelector(".regionlinks a").classList.add("current");
             }
         
             // Watch for region clicks
@@ -667,7 +667,7 @@ var soejs = {
     
     // legacy, from 2015 and 2017
     chartsLoaded: function() {
-        chartsLoaded2();
+        soejs.chartsLoaded2();
         return;
         
     	// Called each time a chart is loaded.
@@ -756,9 +756,10 @@ var soejs = {
     		window.setTimeout(function(){
 
                 // Hide all but queensland or else the region from the URL hash
-    		    myRegion = myRegion.substring(1);
-    		    document.querySelectorAll(String.format(".region-info:not(.{0})", myRegion)).forEach(function (region) {
-    		        region.style.display = "none";
+    		    myRegion = myRegion.substring(1); // remove leading hash
+    		    document.querySelectorAll(".region-info").forEach(function (region) {
+    		        if (!region.classList.contains(myRegion))
+    		            region.style.display = "none";
     		    });
     		    if (soejs.thisFindingHasRegionTabs)
     		        soejs.selectFunction(myRegion);
@@ -789,7 +790,9 @@ var soejs = {
     	    selected_region = 'region-' + selected_region;
         }
     
-        document.querySelector("." + selected_region).style.display = "block";
+        document.querySelectorAll("." + selected_region).forEach(function(sr) { 
+            sr.style.display="block";  
+        });
     	window.location.hash = selected_region;
 
     
