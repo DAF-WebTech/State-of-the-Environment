@@ -1,0 +1,59 @@
+header {
+    background: rgba(0,0,0,0.75);
+
+    @include print {
+        background-color: #fff;
+    }
+    
+    .header {
+
+        a {
+            color: #fff;
+            
+            @include print {
+                color: #000;
+            }
+        }
+        .global-search {
+
+            button {
+                background-color: #007eb1;
+                color: #fff;
+            }
+        }
+        
+        .header-utilities {
+            background-color: #007eb1;
+            
+            @include screen('tablet') {
+                background-color: transparent;
+                margin-top: 1em;
+            }
+
+            .icon-menu-toggle {
+                background-color: #004967;
+                
+                .icon-menu-bar {
+                    background-color: #fff;
+                }
+                &.active { 
+                    background-color: #ff6a00;
+                }
+            }
+            .utilities {
+
+                > li {
+                    border-right: 1px solid #666;
+                }
+            }
+        }
+    }
+}
+
+.biodiversity .header .global-search button { background-color: $biodiversity; }
+.heritage .header .global-search button { background-color: $heritage; }
+.pollution .header .global-search button { background-color: $pollution; }
+.climate .header .global-search button { background-color: $climate; }
+.liveability .header .global-search button { background-color: $liveability; }
+.great-barrier-reef .header .global-search button { background-color: $great-barrier-reef; }
+.climate-change .header .global-search button { background-color: $climate-change; }

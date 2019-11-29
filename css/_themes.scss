@@ -1,0 +1,244 @@
+.home {
+    background: linear-gradient(transparent 50%, #fff 85%), url("./?a=1457174") 0 0 no-repeat #fff;
+    background-size: cover;
+}
+
+.soe-logo {
+    display: block;
+    margin: 1em 0 2.5em 0;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.75));
+}
+
+.main-content {
+    flex-grow: 1;
+}
+
+.home {
+    .youtube-video {
+        padding-top: 300px;
+        width: 60%;
+
+        a {
+            border: 3px solid #fff;
+        }
+    }
+}
+
+.sub-themes {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 0 1em 0;
+    padding: 0;
+    list-style-type: none;
+
+    .tile {
+        text-align: center;
+        width: 50%;
+        padding: 0 2em;
+        margin-bottom: 1.5em;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    
+        img {
+            margin: 0 auto 4px auto;
+        }
+    
+        h2 {
+            line-height: 1.2;
+            margin-bottom: 0.5em;
+    
+            a {
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+        }
+
+        .more {
+            display: block;
+            padding-top: 0.25em;
+            border-top: 1px dashed #ccc;
+        }
+    }
+}
+
+.case-studies {
+    margin-bottom: 2em;
+}
+
+.content-header {
+    overflow: hidden;
+    margin-bottom: 0.5em;
+
+    .container {
+        position: relative;
+        height: 420px;
+    }
+    
+    h1 {
+        background-color: rgba(0,0,0,0.6);
+        width: 200%;
+        height: 110px;
+        position: absolute;
+        bottom: 0;
+        left: 20%;
+        right: 0;
+        margin: 0 auto 0 0;
+        color: #fff;
+        padding-left: 2.5rem;
+        padding-bottom: 0.75rem;
+        border-style: none;
+        display: flex;
+        align-items: flex-end;
+    }
+    
+    &.case-study h1 {
+        left: 12rem;
+    }
+}
+.content {
+    &.case-study {
+        .main-content {
+            padding-left: 15rem;
+        }
+    }
+}
+
+.icon-panel {
+    position: absolute;
+    top: 350px;
+    right: 0;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: #eee;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+
+    &.offset {
+        top: 460px;
+    }
+
+    li {
+        width: 110px;
+        height: 110px;
+        padding: 10px;
+    }
+    img {
+        margin: 0 auto;
+        width: 90px;
+        opacity: 0.5;
+    }
+    li:nth-child(1) {
+        order: 1;
+        
+        img {
+            filter: grayscale(1) brightness(20);
+            opacity: 1;
+        }
+    }
+    .active {
+        order: 2 !important;
+
+        img {
+            filter: grayscale(1) brightness(20);
+            opacity: 1;
+        }
+    }
+    li:nth-child(2) { order: 20; }
+    li:nth-child(3) { order: 30; }
+    li:nth-child(4) { order: 40; }
+    li:nth-child(5) { order: 50; }
+}
+
+
+.programs table > tbody > tr > td:first-child {
+    width: 25%;
+    font-weight: bold;
+}
+
+.biodiversity {
+    .left-column { border-right: 1px solid $biodiversity-medium; }
+    .content-header { border-bottom: 7px solid $biodiversity; }
+    .icon-panel { 
+        background-color: $biodiversity-light; 
+        li:nth-child(1) { background-color: $biodiversity; }
+        .active { background-color: $biodiversity-medium; }
+    }
+}
+.heritage {
+    .left-column { border-right: 1px solid $heritage-medium; }
+    .content-header { border-bottom: 7px solid $heritage; }
+    .icon-panel { 
+        background-color: $heritage-light; 
+        li:nth-child(1) { background-color: $heritage; }
+        .active { background-color: $heritage-medium; }
+    }
+}
+.pollution {
+    .left-column { border-right: 1px solid $pollution-medium; }
+    .content-header { border-bottom: 7px solid $pollution; }
+    .icon-panel { 
+        background-color: $pollution-light; 
+        li:nth-child(1) { background-color: $pollution; }
+        .active { background-color: $pollution-medium; }
+    }
+}
+.climate {
+    .left-column { border-right: 1px solid $climate-medium; }
+    .content-header { border-bottom: 7px solid $climate; }
+    .icon-panel { 
+        background-color: $climate-light; 
+        li:nth-child(1) { background-color: $climate; }
+        .active { background-color: $climate-medium; }
+    }
+}
+.liveability {
+    .left-column { border-right: 1px solid $liveability-medium; }
+    .content-header { border-bottom: 7px solid $liveability; }
+    .icon-panel { 
+        background-color: $liveability-light; 
+        li:nth-child(1) { background-color: $liveability; }
+        .active { background-color: $liveability-medium; }
+    }
+}
+.great-barrier-reef {
+    .left-column { border-right: 1px solid $great-barrier-reef-medium; }
+    .content-header { border-bottom: 7px solid $great-barrier-reef; }
+    .icon-panel { 
+        background-color: $great-barrier-reef-light; 
+        li:nth-child(1) { background-color: $great-barrier-reef; }
+        .active { background-color: $great-barrier-reef-medium; }
+    }
+}
+.climate-change {
+    .left-column { border-right: 1px solid $climate-change-medium; }
+    .content-header { border-bottom: 7px solid $climate-change; }
+    .icon-panel { 
+        background-color: $climate-change-light; 
+        li:nth-child(1) { background-color: $climate-change; }
+        .active { background-color: $climate-change-medium; }
+    }
+}
+
+body {
+    &::before {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 110px;
+        height: 100%;
+        content: '';
+        z-index: -1;
+    }
+    &.biodiversity::before { background-color: $biodiversity-light; }
+    &.heritage::before { background-color: $heritage-light; }
+    &.pollution::before { background-color: $pollution-light; }
+    &.climate::before { background-color: $climate-light; }
+    &.liveability::before { background-color: $liveability-light; }
+    &.great-barrier-reef::before { background-color: $great-barrier-reef-light; }
+    &.climate-change::before { background-color: $climate-change-light; }
+}
