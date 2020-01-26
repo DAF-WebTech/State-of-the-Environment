@@ -37,7 +37,7 @@ var regionNames = Object.keys(regions);
 
 var index = 0;
 
-regionsNames.forEach(function(regionName) {
+regionNames.forEach(function(regionName) {
 	var region = regions[regionName];
 
 	// write out the values as array
