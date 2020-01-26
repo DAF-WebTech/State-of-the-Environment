@@ -47,7 +47,6 @@ options.hAxis.title = "Broad Vegetation Group";
 options.vAxis.title = "Hectares (million)";
 options.vAxis.format = "short";
 var chartData = [{type: "column", options: options, data: table}];
-print("<script id=chartdata type=application/json>" + JSON.stringify(chartData) + "</" + "script>");
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,4 +62,8 @@ htmlTable = tableToHtml(table);
 var heading = "Proportion of total remnant vegetation in protected areas, " + year;
 print(String.format(regionInfoTemplate, region, heading, index, htmlTable.thead, htmlTable.tbody));
 
+// chart uses same data layout
+options = getDefaultPieChartOptions();
+chartData.push([{type: "pie", options: options, data: table}]);
+print("<script id=chartdata type=application/json>" + JSON.stringify(chartData) + "</" + "script>");
 
