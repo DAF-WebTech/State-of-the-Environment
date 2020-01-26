@@ -13,27 +13,27 @@ print("!!" + JSON.stringify(results.data) + "!!");
 var headData = results.data[0];
 var data = results.data.slice(1);
 
-// group the data for the first table
-var regions = { queensland: {p: 0, np: 0} };
+// group the data for our tables
+var regions = { queensland: {} };
 data.forEach(function(record) {
 	var region = record[0];
 	if (!regions[region])
 		regions[region] = {};
 	var group = String.format("{0}. {1}", record[1], record[2]);
+	if (!regions.queensland[group]) 
+		regions.queensland[group] = { p: 0, np: 0 };
 	if (!regions[region][group]) {
 		regions[region][group] = { p: 0, np: 0 };
 	}
-	regions.queensland.p += record[4];
+	regions.queensland[group].p += record[4];
 	regions[region][group].p = record[4];
 	
-	regions.queensland.np += record[5];
+	regions.queensland[group].np += record[5];
 	regions[region][group].np = record[5];
 
 });
-
-print(JSON.stringify("!!" + regions + "!!"));
-
 var groupNames = Object.keys(regions.queensland);
+
 
 // write out the qld values as array
 var table = [["Broad vegetation group", "Protected vegetation", "Non-protected vegetation"]];
