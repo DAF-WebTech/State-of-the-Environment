@@ -8,8 +8,6 @@ var results = Papa.parse(
 	}
 );
 
-print("!!" + JSON.stringify(results.data) + "!!");
-
 var headData = results.data[0];
 var data = results.data.slice(1);
 
@@ -32,50 +30,63 @@ data.forEach(function(record) {
 	regions[region][group].np = record[5];
 
 });
+
 var groupNames = Object.keys(regions.queensland);
 
+var regionNames = Object.keys(regions);
 
-// write out the qld values as array
-var table = [["Broad vegetation group", "Protected vegetation", "Non-protected vegetation"]];
-groupNames.forEach(function(groupName) {
-	var group = regions.queensland[groupName];
-	table.push([groupName, group.p, group.np]);
-});
-
-// convert to html
-var htmlTable = tableToHtml(table, true);
-
-// write out first table
 var index = 0;
-var region = "queensland";
-var year = "2015";
-var heading = "Hectares of broad vegetation groups in protected areas, " + year;
-print(String.format(regionInfoTemplate, region, heading, index, htmlTable.thead, htmlTable.tbody, htmlTable.tfoot));
 
-// chart uses same data layout
-var options = getDefaultColumnChartOptions();
-options.hAxis.title = "Broad Vegetation Group";
-options.vAxis.title = "Hectares (million)";
-options.vAxis.format = "short";
-var chartData = [{type: "column", options: options, data: table}];
+regionsNames.forEach(function(regionName) {
+	var region = regions[regionName];
 
+	// write out the values as array
+	var table = [["Broad vegetation group", "Protected vegetation", "Non-protected vegetation"]];
+	groupNames.forEach(function(groupName) {
+		var group = regions.queensland[groupName];
+		table.push([groupName, group.p, group.np]);
+	});
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-++index;
+	// convert to html
+	var htmlTable = tableToHtml(table, true);
 
-table = [["Type", "Area (hectares)"], ["Protected", 0], ["Non-protected", 0]];
-// get a sum of each type
-groupNames.forEach(function(groupName) {
-	var group = regions.queensland[groupName];
-	table[1][1] += group.p;
-	table[2][1] += group.np;
+	// write out first table
+	var region = "queensland";
+	var year = "2015";
+	var heading = String.format("Hectares of broad vegetation groups in protected areas {0}, {1}", 
+		regionName == "queensland" ? "" : ("in " + regionName), year);
+	print(String.format(regionInfoTemplate, region.toKebabCase(), heading, index, htmlTable.thead, htmlTable.tbody, htmlTable.tfoot));
+
+	// chart uses same data layout
+	var options = getDefaultColumnChartOptions();
+	options.hAxis.title = "Broad Vegetation Group";
+	options.vAxis.title = "Hectares (million)";
+	options.vAxis.format = "short";
+	var chartData = [{type: "column", options: options, data: table}];
+
+	++index;
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+
+	table = [["Type", "Area (hectares)"], ["Protected", 0], ["Non-protected", 0]];
+	// get a sum of each type
+	groupNames.forEach(function(groupName) {
+		var group = regions.queensland[groupName];
+		table[1][1] += group.p;
+		table[2][1] += group.np;
+	});
+	htmlTable = tableToHtml(table);
+	heading = String.format("Proportion of total remnant vegetation in protected areas {0}, {1}" + year, 
+		regionName == "queensland" ? "" : ("in " + regionName), year);
+	print(String.format(regionInfoTemplate, region.toKebabCase(), heading, index, htmlTable.thead, htmlTable.tbody));
+
+	// chart uses same data layout
+	options = getDefaultPieChartOptions();
+	chartData.push({type: "pie", options: options, data: table});
+
+	++index;
+
 });
-htmlTable = tableToHtml(table);
-heading = "Proportion of total remnant vegetation in protected areas, " + year;
-print(String.format(regionInfoTemplate, region, heading, index, htmlTable.thead, htmlTable.tbody));
 
-// chart uses same data layout
-options = getDefaultPieChartOptions();
-chartData.push({type: "pie", options: options, data: table});
 print("<script id=chartdata type=application/json>" + JSON.stringify(chartData) + "</" + "script>");
-
