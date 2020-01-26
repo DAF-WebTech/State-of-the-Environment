@@ -2,12 +2,11 @@ var a = regionInfoTemplate;
 
 print(a);
 
-print(String.format(a, "this is a heading", "", "", "", "", "", ""));
+print(String.format(regionInfoTemplate, "queensland", "heading", 0, "", "", "", "", "", ""));
 
 var b = '%globals_asset_file_contents:75^replace:\r\n:|%';
 
-print ("<P><P><P><P>");
-
+print("<hr>");
 
 var results = Papa.parse(
     b, 
