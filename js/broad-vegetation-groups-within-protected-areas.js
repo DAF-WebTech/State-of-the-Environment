@@ -18,7 +18,7 @@ var regions = { queensland: {p: 0, np: 0} };
 data.forEach(function(record) {
 	var region = record[0];
 	if (!regions[region])
-		regions[region] = {p: 0, np: 0};
+		regions[region] = {};
 	var group = String.format("{0}. {1}", record[1], record[2]);
 	if (!regions[region][group]) {
 		regions[region][group] = { p: 0, np: 0 };
