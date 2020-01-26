@@ -39,5 +39,9 @@ var index = 0;
 var region = "queensland"
 print(String.format(regionInfoTemplate, region, "Hectares of broad vegetation groups in protected areas, 2015", index, htmlTable.thead, htmlTable.tbody));
 
-var chartData = [table];
+// chart uses same data layout
+var options = getDefaultColumnChartOptions();
+options.hAxis.title = "Broad Vegetation Group";
+options.vAxis.title = "Hectares";
+var chartData = [{type: "column", options: options, data: table}];
 print("<script id=chartdata type=application/json>" + JSON.stringify(chartData) + "</" + "script>");
