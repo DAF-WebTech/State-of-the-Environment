@@ -60,7 +60,7 @@ regionNames.forEach(function(regionName) {
 	// chart uses same data layout
 	var options = getDefaultColumnChartOptions();
 	options.hAxis.title = "Broad Vegetation Group";
-	options.vAxis.title = "Hectares (million)";
+	options.vAxis.title = "Hectares";
 	options.vAxis.format = "short";
 	chartData.push({type: "column", options: options, data: table});
 
