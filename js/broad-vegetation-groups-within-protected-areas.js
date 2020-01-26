@@ -8,6 +8,8 @@ var results = Papa.parse(
 	}
 );
 
+print("!!" + JSON.stringify(results.data) + "!!");
+
 var headData = results.data[0];
 var data = results.data.slice(1);
 
@@ -28,6 +30,8 @@ data.forEach(function(record) {
 	regions[region][group].np = record[5];
 
 });
+
+print(JSON.stringify("!!" + regions + "!!"));
 
 var groupNames = Object.keys(regions.queensland);
 
