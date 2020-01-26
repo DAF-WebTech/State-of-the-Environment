@@ -31,8 +31,6 @@ data.forEach(function(record) {
 
 });
 
-var groupNames = Object.keys(regions.queensland);
-
 var regionNames = Object.keys(regions);
 
 var index = 0;
@@ -41,11 +39,12 @@ var chartData = [];
 
 regionNames.forEach(function(regionName) {
 	var region = regions[regionName];
+	var groupNames = Object.keys(region);
 
 	// write out the values as array
 	var table = [["Broad vegetation group", "Protected vegetation", "Non-protected vegetation"]];
 	groupNames.forEach(function(groupName) {
-		var group = regions.queensland[groupName];
+		var group = region[groupName];
 		table.push([groupName, group.p, group.np]);
 	});
 
@@ -53,11 +52,10 @@ regionNames.forEach(function(regionName) {
 	var htmlTable = tableToHtml(table, true);
 
 	// write out first table
-	var region = "queensland";
 	var year = "2015";
 	var heading = String.format("Hectares of broad vegetation groups in protected areas {0}, {1}", 
 		regionName == "queensland" ? "" : ("in " + regionName), year);
-	print(String.format(regionInfoTemplate, region.toKebabCase(), heading, index, htmlTable.thead, htmlTable.tbody, htmlTable.tfoot));
+	print(String.format(regionInfoTemplate, regionName.toKebabCase(), heading, index, htmlTable.thead, htmlTable.tbody, htmlTable.tfoot));
 
 	// chart uses same data layout
 	var options = getDefaultColumnChartOptions();
@@ -74,14 +72,14 @@ regionNames.forEach(function(regionName) {
 	table = [["Type", "Area (hectares)"], ["Protected", 0], ["Non-protected", 0]];
 	// get a sum of each type
 	groupNames.forEach(function(groupName) {
-		var group = regions.queensland[groupName];
+		var group = region[groupName];
 		table[1][1] += group.p;
 		table[2][1] += group.np;
 	});
 	htmlTable = tableToHtml(table);
 	heading = String.format("Proportion of total remnant vegetation in protected areas {0}, {1}" + year, 
 		regionName == "queensland" ? "" : ("in " + regionName), year);
-	print(String.format(regionInfoTemplate, region.toKebabCase(), heading, index, htmlTable.thead, htmlTable.tbody));
+	print(String.format(regionInfoTemplate, regionName.toKebabCase(), heading, index, htmlTable.thead, htmlTable.tbody));
 
 	// chart uses same data layout
 	options = getDefaultPieChartOptions();
