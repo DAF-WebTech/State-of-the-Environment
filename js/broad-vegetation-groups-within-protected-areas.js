@@ -53,13 +53,14 @@ var chartData = [{type: "column", options: options, data: table}];
 ++index;
 
 table = [["Type", "Area (hectares)"], ["Protected", 0], ["Non-protected", 0]];
+// get a sum of each type
 groupNames.forEach(function(groupName) {
 	var group = groups[groupName];
 	table[1][1] += group.p;
 	table[2][1] += group.np;
 });
 htmlTable = tableToHtml(table);
-var heading = "Proportion of total remnant vegetation in protected areas, " + year;
+heading = "Proportion of total remnant vegetation in protected areas, " + year;
 print(String.format(regionInfoTemplate, region, heading, index, htmlTable.thead, htmlTable.tbody));
 
 // chart uses same data layout
