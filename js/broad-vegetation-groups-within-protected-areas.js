@@ -12,22 +12,29 @@ var headData = results.data[0];
 var data = results.data.slice(1);
 
 // group the data for the first table
-var groups = {};
+var regions = { queensland: {p: 0, np: 0} };
 data.forEach(function(record) {
+	var region = record[0];
+	if (!regions[region])
+		regions[region] = {p: 0, np: 0};
 	var group = String.format("{0}. {1}", record[1], record[2]);
-	if (!groups[group]) {
-		groups[group] = { p: 0, np: 0 };
+	if (!regions[region][group]) {
+		regions[region][group] = { p: 0, np: 0 };
 	}
-	groups[group].p += record[4];
-	groups[group].np += record[5];
+	regions.queensland.p += record[4];
+	regions[region][group].p = record[4];
+	
+	regions.queensland.np += record[5];
+	regions[region][group].np = record[5];
+
 });
 
-var groupNames = Object.keys(groups);
+var groupNames = Object.keys(regions.queensland);
 
-// write it out as array
+// write out the qld values as array
 var table = [["Broad vegetation group", "Protected vegetation", "Non-protected vegetation"]];
 groupNames.forEach(function(groupName) {
-	var group = groups[groupName];
+	var group = regions.queensland[groupName];
 	table.push([groupName, group.p, group.np]);
 });
 
@@ -55,7 +62,7 @@ var chartData = [{type: "column", options: options, data: table}];
 table = [["Type", "Area (hectares)"], ["Protected", 0], ["Non-protected", 0]];
 // get a sum of each type
 groupNames.forEach(function(groupName) {
-	var group = groups[groupName];
+	var group = regions.queensland[groupName];
 	table[1][1] += group.p;
 	table[2][1] += group.np;
 });
