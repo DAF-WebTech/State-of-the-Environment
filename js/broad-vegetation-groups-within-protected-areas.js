@@ -13,7 +13,7 @@ var results = Papa.parse(
     {
         skipEmptyLines: true, 
         dynamicTyping: true,
-        delimiter: "|"
+        newline: "|"
     }
 );
 
