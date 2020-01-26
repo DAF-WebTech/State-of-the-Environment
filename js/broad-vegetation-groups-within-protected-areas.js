@@ -4,17 +4,18 @@ print(a);
 
 print(String.format(a, "this is a heading", "", "", "", "", "", ""));
 
-var b = "%globals_asset_file_contents:75%^replace:\r\n:|";
+var b = "%globals_asset_file_contents:75^replace:\r\n:|^replace:":\"%";
 
 print (b);
 
 
-//var results = Papa.parse(
-//    "%globals_asset_file_contents:70:js/broad-vegetation-groups-within-protected-areas.js^replace:\r\n:\\n%", 
-//    {
-//        skipEmptyLines: true, 
-//        dynamicTyping: true
-//    }
-//);
+var results = Papa.parse(
+    b, 
+    {
+        skipEmptyLines: true, 
+        dynamicTyping: true,
+        delimiter: "|"      
+    }
+);
 
-//print(JSON.stringify(results));
+print(JSON.stringify(results));
