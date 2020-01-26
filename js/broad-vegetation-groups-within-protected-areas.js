@@ -1,6 +1,4 @@
 
-//print(String.format(regionInfoTemplate, "queensland", "heading", 0, "", "", "", "", "", ""));
-
 var csv = '%globals_asset_file_contents:75^replace:\r\n:\\n%';
 var results = Papa.parse(
 	csv,
@@ -24,24 +22,45 @@ data.forEach(function(record) {
 	groups[group].np += record[5];
 });
 
+var groupNames = Object.keys(groups);
+
 // write it out as array
 var table = [["Broad vegetation group", "Protected vegetation", "Non-protected vegetation"]];
-Object.keys(groups).forEach(function(groupName) {
+groupNames.forEach(function(groupName) {
 	var group = groups[groupName];
 	table.push([groupName, group.p, group.np]);
 });
 
 // convert to html
-var htmlTable = tableToHtml(table);
+var htmlTable = tableToHtml(table, true);
 
 // write out first table
 var index = 0;
-var region = "queensland"
-print(String.format(regionInfoTemplate, region, "Hectares of broad vegetation groups in protected areas, 2015", index, htmlTable.thead, htmlTable.tbody));
+var region = "queensland";
+var year = "2015";
+var heading = "Hectares of broad vegetation groups in protected areas, " + year;
+print(String.format(regionInfoTemplate, region, heading, index, htmlTable.thead, htmlTable.tbody, htmlTable.tfoot));
 
 // chart uses same data layout
 var options = getDefaultColumnChartOptions();
 options.hAxis.title = "Broad Vegetation Group";
-options.vAxis.title = "Hectares";
+options.vAxis.title = "Hectares (million)";
+options.vAxis.format = "short";
 var chartData = [{type: "column", options: options, data: table}];
 print("<script id=chartdata type=application/json>" + JSON.stringify(chartData) + "</" + "script>");
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+++index;
+
+table = [["Type", "Area (hectares)"], ["Protected", 0], ["Non-protected", 0]];
+groupNames.forEach(function(groupName) {
+	var group = groups[groupName];
+	table[1][1] += group.p;
+	table[2][1] += group.np;
+});
+htmlTable = tableToHtml(table);
+var heading = "Proportion of total remnant vegetation in protected areas, " + year;
+print(String.format(regionInfoTemplate, region, heading, index, htmlTable.thead, htmlTable.tbody));
+
+
