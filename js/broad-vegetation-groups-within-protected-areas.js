@@ -24,19 +24,26 @@ data.forEach(function(record) {
 	groups[group].np += record[5];
 });
 
+// write it out as array
+var table = [["Broad vegetation group", "Protected vegetation", "Non-protected vegetation"]];
+Object.keys(groups).forEach(function(groupName) {
+	var group = groups[groupName];
+	table.push([groupName, group.p, group.np]);
+});
+
+// convert to html
+var htmlTable = tableToHtml(table);
+
 // write out first table
 var index = 0;
 var region = "queensland"
+print(String.format(regionInfoTemplate, region, "Hectares of broad vegetation groups in protected areas, 2015", index, htmlTable.thead, htmlTable.tbody));
 
-var thead = "<th scope=row>Broad vegetation group<th scope=row class=num>Protected vegetation<th scope=row class=num>Non-protected vegetation";
+print("<hr>");
+print(JSON.stringify(table));
 
-var tbody = "";
-Object.keys(groups).forEach(function(groupName) {
-	var group = groups[groupName];
-	tbody += String.format("<tr><td scope=row>{0}<td class=num>{1}<td class=num>{2}", groupName, group.p.toLocaleString(), group.np.toLocaleString());
-});
-
-print(String.format(regionInfoTemplate, region, "Hectares of broad vegetation groups in protected areas, 2015", index, thead, tbody));
+print("<hr>");
+print(JSON.stringify(htmlTable));
 
 
 print("<hr>");
