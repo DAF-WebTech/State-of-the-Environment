@@ -37,6 +37,8 @@ var regionNames = Object.keys(regions);
 
 var index = 0;
 
+var chartData = [];
+
 regionNames.forEach(function(regionName) {
 	var region = regions[regionName];
 
@@ -62,7 +64,7 @@ regionNames.forEach(function(regionName) {
 	options.hAxis.title = "Broad Vegetation Group";
 	options.vAxis.title = "Hectares (million)";
 	options.vAxis.format = "short";
-	var chartData = [{type: "column", options: options, data: table}];
+	chartData.push([{type: "column", options: options, data: table}]);
 
 	++index;
 
