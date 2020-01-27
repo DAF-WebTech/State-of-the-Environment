@@ -48,5 +48,30 @@ options.isStacked = true;
 
 chartData.push({type: "column", options: options, data: chartTable});
 
+//////////////////////////////////////////////////////////////////
+head[0] = "Year";
+table = [head];
+data.forEach(function(record) {
+	if (record[0] != "All")
+		return;
+
+	var row = [];
+	for (var i = 3; i < record.length; i +=3) {
+		row.push(record[i]);
+	}
+	table.push(row);
+});
+// convert to html
+htmlTable = tableToHtml(table, true);
+heading = "Cumulated extent of all protected areas";
+print(String.format(regionInfoTemplate, "queensland", heading, 1, htmlTable.thead, htmlTable.tbody, htmlTable.tfoot));
+
+
+chartTable = table.transpose();
+options.vAxis.title = "Hectares";
+
+chartData.push({type: "column", options: options, data: chartTable});
+
+//////////////////////////////////////////////////////////////////////////
 
 print("<script id=chartdata type=application/json>" + JSON.stringify(chartData) + "</" + "script>");
