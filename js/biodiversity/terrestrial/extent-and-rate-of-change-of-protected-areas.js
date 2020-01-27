@@ -24,8 +24,8 @@ data.forEach(function(record) {
 		return;
 
 	var row = [record[0]];
-	for (var i = 2; i < record[0].length; i +=3) {
-		row.push(record[0][i]);
+	for (var i = 2; i < record.length; i +=3) {
+		row.push(record[i]);
 	}
 	table.push(row);
 });
