@@ -37,9 +37,11 @@ print(String.format(regionInfoTemplate, "queensland", heading, 0, htmlTable.thea
 
 var chartData = [];
 var chartTable = table.transpose();
+chartTable[0][0] = {label: chartTable[0][0], type: "string"};
 var options = getDefaultColumnChartOptions();	
 options.vAxis.title = "Number of protected areas";
 options.isStacked = true;
+
 
 chartData.push({type: "column", options: options, data: chartTable});
 
