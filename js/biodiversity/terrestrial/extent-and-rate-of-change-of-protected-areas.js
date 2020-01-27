@@ -40,7 +40,6 @@ var chartTable = table.transpose();
 chartTable[0].forEach(function(cell, i) {
 	cell = {label: cell, type: i == 0 ? "string" : "number"};	
 });
-chartTable[0][0] = {label: chartTable[0][0], type: "string"};
 
 var options = getDefaultColumnChartOptions();	
 options.vAxis.title = "Number of protected areas";
