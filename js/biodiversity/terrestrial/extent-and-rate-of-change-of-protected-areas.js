@@ -69,6 +69,7 @@ print(String.format(regionInfoTemplate, "queensland", heading, 1, htmlTable.thea
 
 chartTable = table.transpose();
 options.vAxis.title = "Hectares";
+options.vAxis.format = "short"; 
 
 chartData.push({type: "column", options: options, data: chartTable});
 
