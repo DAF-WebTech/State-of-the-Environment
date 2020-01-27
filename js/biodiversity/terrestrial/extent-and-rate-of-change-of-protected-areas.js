@@ -1,4 +1,5 @@
-var csv = '%globals_asset_file_contents:76^replace:\r\n:\\n%';
+var csv = "%globals_asset_file_contents:76^replace:\r\n:\\n%";
+//var csv = "% frontend_asset_metadata_csv^as_asset:asset_file_contents^replace:\r\n:\\n %";
 var results = Papa.parse(
 	csv,
 	{
