@@ -112,9 +112,10 @@ print(String.format(regionInfoTemplate, "queensland", heading, index++, htmlTabl
 
 arrayTable = arrayTable.transpose();
 var chartOptions = getDefaultLineChartOptions();
-columnChartOptions.vAxis.title = "Hectares";
-columnChartOptions.vAxis.format = "short";
-chartData.push({ type: "line", options: columnChartOptions, data: arrayTable });
+chartOptions.vAxis.title = "Hectares";
+chartOptions.vAxis.format = "short";
+chartData.push({ type: "line", options: chartOptions, data: arrayTable });
+
 
 
 
