@@ -55,7 +55,7 @@ data.forEach(function(record) {
 	if (record[0] != "All")
 		return;
 
-	var row = [];
+	var row = [record[1]];
 	for (var i = 3; i < record.length; i +=3) {
 		row.push(record[i]);
 	}
