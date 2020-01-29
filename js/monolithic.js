@@ -249,7 +249,7 @@ var soejs = {
 	showRegionColourFlag: false,
 	firstHash: false,
 
-	getDefaultColumnChartOptions: function () {
+	getDefaultColumnChartOptions: function (numberOfColours) {
 		// these are cut down version, do we need to add anything?
 		var num = 7;
 		if (numberOfColours)
@@ -263,7 +263,7 @@ var soejs = {
 			height: 400,
 			showTip: true,
 			vAxis: {
-				title: "", // always need this
+				title: "", // client always needs to supply this
 				titleTextStyle: { italic: false }
 			},
 			width: "100%",
@@ -289,8 +289,8 @@ var soejs = {
 		};
 	},
 
-	getDefaultLineChartOptions: function () {
-		var retVal = this.getDefaultColumnChartOptions();
+	getDefaultLineChartOptions: function (numberOfColours) {
+		var retVal = this.getDefaultColumnChartOptions(numberOfColours);
 		retVal.pointSize = 3;
 		return retVal;
 	},
