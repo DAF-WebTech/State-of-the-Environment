@@ -269,7 +269,8 @@ var soejs = {
                 title: "", // always need this
                 titleTextStyle: {italic: false}
             },
-            width: "100%"
+            width: "100%",
+            fontSize: 12
         };
     },
     
@@ -282,7 +283,8 @@ var soejs = {
             height: 250,
             //is3D: true,
             showTip: true,
-            width: "100%"
+            width: "100%",
+            fontSize: 12
         };
     },
     

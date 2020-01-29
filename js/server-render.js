@@ -117,17 +117,18 @@ var getDefaultColumnChartOptions = function(numberOfColours) {
     
 	return  { 
         hAxis: {
-            title: "Year", // always need this
+            title: "Year", // a default value, client to change if necessary
             titleTextStyle: {italic: false}
         },
         height: 400,
         showTip: true,
         vAxis: {
-            title: "", // always need this
+            title: "", // client always supplies this
             titleTextStyle: {italic: false}
         },
         width: "100%",
-				colors: getColours(num)
+				colors: getColours(num),
+				fontSize: 12
     };
 }
 
@@ -145,7 +146,8 @@ var getDefaultPieChartOptions = function(numberOfColours) {
         //is3D: true,
         showTip: true,
         width: "100%",
-				colors: getColours(num)
+				colors: getColours(num),
+				fontSize: 12
     };
 }
 
