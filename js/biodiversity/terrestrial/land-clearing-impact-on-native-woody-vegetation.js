@@ -1,5 +1,5 @@
 
-var results = Papa.parse("%frontend_asset_metadata_data-file^as_asset:file_contents^replace:\r\n:\\n%", {
+var results = Papa.parse("%frontend_asset_metadata_data-file^as_asset:asset_file_contents^replace:\r\n:\\n%", {
 	skipEmptyLines: true, 
 	dynamicTyping: true
 });
