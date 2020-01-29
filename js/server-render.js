@@ -94,19 +94,19 @@ String.format = function (format, args) {
 };
 
 var getColours = function(num) {
-		var  dark = ["#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043"]; /*darker*/
-		var light = ["#5e97f5", "#e06055", "#f5bf26", "#33ab71", "#b762c6", "#26b8ca", "#ff855f"]; /*lighter*/
-		var ret = [];
-		if (num < 8) {
-			ret = dark.slice(0, num);
-			return ret;
-		}
-		for (var i = 0; i < num / 2; ++i) {
-			ret.push(dark[i]);
-			ret.push(light[i]);
-		}
-		return ret
-	},
+	var  dark = ["#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043"]; /*darker*/
+	var light = ["#5e97f5", "#e06055", "#f5bf26", "#33ab71", "#b762c6", "#26b8ca", "#ff855f"]; /*lighter*/
+	var ret = [];
+	if (num < 8) {
+		ret = dark.slice(0, num);
+		return ret;
+	}
+	for (var i = 0; i < num / 2; ++i) {
+		ret.push(dark[i]);
+		ret.push(light[i]);
+	}
+	return ret
+}
 
 
 var getDefaultColumnChartOptions = function(numberOfColours) {
@@ -129,7 +129,7 @@ var getDefaultColumnChartOptions = function(numberOfColours) {
         width: "100%",
 				colors: getColours(num)
     };
-};
+}
 
 var getDefaultPieChartOptions = function(numberOfColours) {
 	var num = 7;
@@ -153,7 +153,7 @@ var getDefaultLineChartOptions = function(numberOfColours) {
   var retVal = this.getDefaultColumnChartOptions(numberOfColours);
   retVal.pointSize = 3;
   return retVal;
-};
+}
 
 // makes assumptions about the structure of the table
 // so if your 2-d array does not fit the structure
