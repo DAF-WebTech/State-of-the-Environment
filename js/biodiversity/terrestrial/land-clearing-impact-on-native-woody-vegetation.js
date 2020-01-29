@@ -58,7 +58,7 @@ print(regionInfo);
 // transpose for chart
 var chart = { data: table.transpose() };
 chart.data[0][0] = { label: "Year", type: "string" };
-chart.options = getDefaultColumnChartOptions(chartData[0].length);
+chart.options = getDefaultColumnChartOptions(table.length);
 chart.options.hAxis.title = "Year range";
 chart.options.vAxis.title = "Hectares per year";
 chart.options.isStacked = true;
