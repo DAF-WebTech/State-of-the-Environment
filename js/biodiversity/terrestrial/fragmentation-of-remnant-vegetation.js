@@ -129,3 +129,11 @@ chartData.push({ type: "column", options: columnChartOptions, data: arrayTable }
 
 
 print("<script id=chartdata type=application/json>" + JSON.stringify(chartData) + "</" + "script>");
+
+
+// nb, the client will need this:
+/*
+var tfootCells = document.querySelectorAll("div#table_1 tfoot th");
+for (var i = 1; i < tfootCells.length; ++i)
+	tfootCells[i].innerText = Number(tfootCells[i].innerText).toFixed(6);
+*/
