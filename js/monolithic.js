@@ -270,7 +270,8 @@ var soejs = {
                 titleTextStyle: {italic: false}
             },
             width: "100%",
-            fontSize: 12
+            fontSize: 12,
+            fontName: "Lato, sans-serif"
         };
     },
     
@@ -284,7 +285,8 @@ var soejs = {
             //is3D: true,
             showTip: true,
             width: "100%",
-            fontSize: 12
+            fontSize: 12,
+            fontName: "Lato, sans-serif"
         };
     },
     
