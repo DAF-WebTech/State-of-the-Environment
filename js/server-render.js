@@ -178,7 +178,7 @@ var tableToHtml = function(table, hasFoot) {
 			ret.tbody += "<td class=num>" + (table[i][j] == null ? "" : table[i][j].toLocaleString());
 			if (hasFoot)
 				if (table[i][j] != null)
-					sums[j-1] += table[i][j];
+					sums[j-1] += Number(table[i][j]);
 		}
 	}
 
