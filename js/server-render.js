@@ -149,8 +149,8 @@ var getDefaultPieChartOptions = function(numberOfColours) {
     };
 }
 
-var getDefaultLineChartOptions = function() {
-  var retVal = this.getDefaultColumnChartOptions();
+var getDefaultLineChartOptions = function(numberOfColours) {
+  var retVal = this.getDefaultColumnChartOptions(numberOfColours);
   retVal.pointSize = 3;
   return retVal;
 };
