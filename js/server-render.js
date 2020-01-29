@@ -93,10 +93,29 @@ String.format = function (format, args) {
 	return result;
 };
 
+var getColours = function(num) {
+		var  dark = ["#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043"]; /*darker*/
+		var light = ["#5e97f5", "#e06055", "#f5bf26", "#33ab71", "#b762c6", "#26b8ca", "#ff855f"]; /*lighter*/
+		var ret = [];
+		if (num < 8) {
+			ret = dark.slice(0, num);
+			return ret;
+		}
+		for (var i = 0; i < num / 2; ++i) {
+			ret.push(dark[i]);
+			ret.push(light[i]);
+		}
+		return ret
+	},
 
-var getDefaultColumnChartOptions = function() {
-    // these are cut down version, do we need to add anything
-    return  { 
+
+var getDefaultColumnChartOptions = function(numberOfColours) {
+    // these are cut down version, do we need to add anything?
+		var num = 7;
+		if (numberOfColours)
+			num = numberOfColours;
+    
+	return  { 
         hAxis: {
             title: "Year", // always need this
             titleTextStyle: {italic: false}
@@ -107,12 +126,17 @@ var getDefaultColumnChartOptions = function() {
             title: "", // always need this
             titleTextStyle: {italic: false}
         },
-        width: "100%"
+        width: "100%",
+				colors: getColours(num)
     };
 };
 
-var getDefaultPieChartOptions = function() {
-    return {
+var getDefaultPieChartOptions = function(numberOfColours) {
+	var num = 7;
+	if (numberOfColours)
+		num = numberOfColours;
+
+	return {
         chartArea: {
             width: "80%",
             height: "80%"
@@ -120,7 +144,8 @@ var getDefaultPieChartOptions = function() {
         height: 250,
         //is3D: true,
         showTip: true,
-        width: "100%"
+        width: "100%",
+				colors: getColours(num)
     };
 }
 
