@@ -1,5 +1,33 @@
 var csv = '%frontend_asset_metadata_data-file^as_asset:asset_file_contents^replace:\r\n:\\n%';
 
+function myTableToHtml(table, hasFoot, decimalPlaces) {
+	var ret = { thead: "", tbody: "" };
+	ret.thead = "<th scope=col>" + table[0][0];
+	if (hasFoot)
+		var sums = [];
+	for (var i = 1; i < table[0].length; ++i) {
+		ret.thead += "<th scope=col class=num>" + table[0][i];
+		if (hasFoot)
+			sums.push(null);
+	}
+	for (var i = 1; i < table.length; ++i) {
+		ret.tbody += "<tr><th scope=row>" + table[i][0];
+		for (var j = 1; j < table[i].length; ++j) {
+			ret.tbody += "<td class=num>" + table[i][j].toFixed(decimalPlaces);
+			if (hasFoot)
+				if (table[i][j] != null)
+					sums[j - 1] += table[i][j];
+		}
+	}
+
+	if (hasFoot) {
+		ret.tfoot = "<tfoot><tr><th scope=row>Total";
+		sums.forEach(function (s) {
+			ret.tfoot += "<th class=num>" + (s == null ? "" : s.toFixed(decimalPlaces));
+		});
+	}
+	return ret;
+}
 
 
 var results = Papa.parse(
@@ -20,11 +48,11 @@ var arrayTable = [arrayHead];
 data.forEach(function (record) {
 	var arrayRow = [record[0]];
 	for (var i = 2; i < 20; i += 2)
-		arrayRow.push(record[i] == 0 ? "0" : record[i].toFixed(6));
+		arrayRow.push(record[i]);
 	arrayTable.push(arrayRow);
 });
 
-var htmlTable = tableToHtml(arrayTable);
+var htmlTable = myTableToHtml(arrayTable, false, 6);
 htmlTable.tfoot = "<tfoot><tr><th scope=row>Total<th class=num>1.000000<th class=num>1.000000<th class=num>1.000000<th class=num>1.000000<th class=num>1.000000<th class=num>1.000000<th class=num>1.000000<th class=num>1.000000<th>1.000000";
 
 var heading = "Core Size Distribution: Distribution of core remnant size classes as a proportion of remnant area";
@@ -51,13 +79,11 @@ var arrayTable = [arrayHead];
 data.forEach(function (record) {
 	var arrayRow = [record[0]];
 	for (var i = 3; i < 18; i += 2)
-		arrayRow.push(record[i] == 0 ? "0" : record[i].toFixed(6));
+		arrayRow.push(record[i] == 0 ? 0 : record[i]);
 	arrayTable.push(arrayRow);
 });
 
-var htmlTable = tableToHtml(arrayTable, true);
-// fix footer, might have bad floating point
-
+var htmlTable = myTableToHtml(arrayTable, true, 6);
 
 var heading = "Core Size Density: Count of core remnant size class areas, per 100 square kilometres";
 
@@ -77,12 +103,12 @@ var arrayHead = ["Bioregion", "Patch", "Edge"];
 var arrayTable = [arrayHead];
 data.forEach(function (record) {
 	var arrayRow = [record[0]];
-	arrayRow.push(record[19].toFixed(2));
-	arrayRow.push(record[20].toFixed(2));
+	arrayRow.push(record[19]);
+	arrayRow.push(record[20]);
 	arrayTable.push(arrayRow);
 });
 
-var htmlTable = tableToHtml(arrayTable, true);
+var htmlTable = myTableToHtml(arrayTable, true, 2);
 
 var heading = "Patch and Edge Density: Count of patch and edge areas, per 100 square kilometres";
 
@@ -99,17 +125,18 @@ columnChartOptions.hAxis.title = "Bioregion";
 columnChartOptions.isStacked = false;
 chartData.push({ type: "column", options: columnChartOptions, data: arrayTable });
 
+
 //4. column chart
 var arrayHead = ["Bioregion", "Edge", "Patch"];
 var arrayTable = [arrayHead];
 data.forEach(function (record) {
 	var arrayRow = [record[0]];
-	arrayRow.push(record[18].toFixed(6));
-	arrayRow.push(record[17].toFixed(6));
+	arrayRow.push(record[18]);
+	arrayRow.push(record[17]);
 	arrayTable.push(arrayRow);
 });
 
-var htmlTable = tableToHtml(arrayTable, true);
+var htmlTable = myTableToHtml(arrayTable, true, 6);
 htmlTable.thead = "<thead><tr><th scope=col rowspan=2>Bioregion<th colspan=2>Proportion of remnant for non-core</th><tr><th scope=col class=num>Edge<th scope=col class=num>Patch";//this one is different
 var heading = "Proportion remnant non-core — edge and patch";
 
@@ -128,12 +155,5 @@ chartData.push({ type: "column", options: columnChartOptions, data: arrayTable }
 
 
 
+
 print("<script id=chartdata type=application/json>" + JSON.stringify(chartData) + "</" + "script>");
-
-
-// nb, the client will need this:
-/*
-var tfootCells = document.querySelectorAll("div#table_1 tfoot th");
-for (var i = 1; i < tfootCells.length; ++i)
-	tfootCells[i].innerText = Number(tfootCells[i].innerText).toFixed(6);
-*/
