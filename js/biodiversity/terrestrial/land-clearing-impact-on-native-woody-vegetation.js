@@ -49,7 +49,7 @@ if (data[i][1] == "Total clearing") {
 // iterate array for our html table
 var tableHtml = tableToHtml(table, true);
 
-// TODO matrix replace
+
 var regionInfo = String.format(regionInfoTemplate, region, heading, ++index, tableHtml.thead, tableHtml.tbody, tableHtml.tfoot)
 print(regionInfo);
 
@@ -58,7 +58,7 @@ print(regionInfo);
 // transpose for chart
 var chart = { data: table.transpose() };
 chart.data[0][0] = { label: "Year", type: "string" };
-chart.options = getDefaultColumnChartOptions();
+chart.options = getDefaultColumnChartOptions(chartData[0].length);
 chart.options.hAxis.title = "Year range";
 chart.options.vAxis.title = "Hectares per year";
 chart.options.isStacked = true;
