@@ -250,7 +250,11 @@ var soejs = {
 	firstHash: false,
 
 	getDefaultColumnChartOptions: function () {
-		// these are cut down version, do we need to add anything
+		// these are cut down version, do we need to add anything?
+		var num = 7;
+		if (numberOfColours)
+			num = numberOfColours;
+
 		return {
 			hAxis: {
 				title: "Year", // always need this
@@ -271,6 +275,7 @@ var soejs = {
 		var num = 7;
 		if (numberOfColours)
 			num = numberOfColours;
+
 		return {
 			chartArea: {
 				width: "80%",
