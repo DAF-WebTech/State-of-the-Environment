@@ -128,7 +128,8 @@ var getDefaultColumnChartOptions = function(numberOfColours) {
         },
         width: "100%",
 				colors: getColours(num),
-				fontSize: 12
+				fontSize: 12,
+				fontName: "Lato, sans-serif"
     };
 }
 
@@ -147,7 +148,8 @@ var getDefaultPieChartOptions = function(numberOfColours) {
         showTip: true,
         width: "100%",
 				colors: getColours(num),
-				fontSize: 12
+				fontSize: 12,
+				fontName: "Lato, sans-serif"
     };
 }
 
