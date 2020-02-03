@@ -119,15 +119,13 @@
 			heading = String.format("{0} urban area growth between 1999 and {1}", region, data[3][i+1]);
 
 			htmlTable = tableToHtml(arrayTable, false)
-			print(String.format(regionInfoTemplate, region, heading, index++, htmlTable.thead, htmlTable.tbody));
+			print(String.format(regionInfoTemplate, region, heading, index++, htmlTable.thead, htmlTable.tbody, "", i == 0 ? "" : "initial-hide"));
 
 			arrayTable[0][0] = "Year";
 			var myChart = arrayTable.transpose();
 			columnChartOptions = getDefaultColumnChartOptions();
 			columnChartOptions.vAxis.minValue = 0;
 			chartData.push({ type: "column", options: columnChartOptions, data: myChart });
-
-
 
 		});
 

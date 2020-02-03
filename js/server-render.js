@@ -195,7 +195,7 @@ var tableToHtml = function(table, hasFoot) {
 
 
 var regionInfoTemplate = "\n\
-<div class=\"region-info region-{0}\">\n\
+<div class=\"region-info region-{0} {6}\" {7}>\n\
     <h4>{1}</h4>\n\
     <ul class=chart-tabs data-index={2}>\n\
         <li class=active><span>Chart</span></li>\n\
