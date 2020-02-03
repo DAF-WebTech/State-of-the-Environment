@@ -26,7 +26,7 @@ print(String.format(regionInfoTemplate, region, heading, index++, htmlTable.thea
 
 arrayTable[0][0] = "Year";
 chart1 = arrayTable.transpose();
-var columnChartOptions = getDefaultColumnChartOptions();
+var columnChartOptions = getDefaultColumnChartOptions(1);
 columnChartOptions.vAxis.minValue = 0;
 chartData = [{ type: "column", options: columnChartOptions, data: chart1 }];
 
@@ -47,7 +47,7 @@ print(String.format(regionInfoTemplate, region, heading, index++, htmlTable.thea
 arrayTable[0][0] = "Year";
 var chart2 = arrayTable.transpose();
 
-var pieChartOptions = getDefaultPieChartOptions();
+var pieChartOptions = getDefaultPieChartOptions(2);
 chartData.push({ type: "pie", options: pieChartOptions, data: chart2 });
 
 //////////////////////////////////////////////////////////////////////
@@ -76,7 +76,7 @@ regions.forEach(function (region, i) {
 
 	arrayTable[0][0] = "Year";
 	var myChart = arrayTable.transpose();
-	columnChartOptions = getDefaultColumnChartOptions();
+	columnChartOptions = getDefaultColumnChartOptions(1);
 	columnChartOptions.vAxis.minValue = 0;
 	chartData.push({ type: "column", options: columnChartOptions, data: myChart });
 
