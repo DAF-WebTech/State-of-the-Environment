@@ -56,7 +56,8 @@ print("<h3>Urban area growth between 1999 and current by region (Current data is
 
 var regions = dataHead.slice(1, dataHead.length - 2);
 
-print("<ul id=regionCheckboxes>");
+
+print("<div class=subregions><ul id=regionCheckboxes>");
 regions.forEach(function (r, i) {
 	print(String.format("<li><input type=checkbox value=\"{0}\" id=checkbox_{0} {2} onchange=\"showHideChart(this)\" /><label for=checkbox_{0}>{1}</label>", r.toKebabCase(), r, i == 0 ? "checked" : ""));
 });
@@ -71,7 +72,7 @@ regions.forEach(function (region, i) {
 	heading = String.format("{0} urban area growth between 1999 and {1}", region, data[3][i + 1]);
 
 	htmlTable = tableToHtml(arrayTable, false)
-	print(String.format(regionInfoTemplate, region.toKebabCase(), heading, index++, htmlTable.thead, htmlTable.tbody, "", i == 0 ? "" : "initial-hide"));
+	print(String.format(regionInfoTemplate, region.toKebabCase(), heading, index++, htmlTable.thead, htmlTable.tbody));
 
 	arrayTable[0][0] = "Year";
 	var myChart = arrayTable.transpose();
@@ -82,5 +83,7 @@ regions.forEach(function (region, i) {
 
 
 });
+
+print("</div>");
 
 print("<script id=chartdata type=application/json>" + JSON.stringify(chartData) + "</" + "script>");
