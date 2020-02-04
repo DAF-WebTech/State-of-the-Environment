@@ -75,9 +75,11 @@ regions.forEach(function (region, i) {
 	print(String.format(regionInfoTemplate, region.toKebabCase(), heading, index++, htmlTable.thead, htmlTable.tbody));
 
 	arrayTable[0][0] = "Year";
+	arrayTable[0][2] = data[3][i + 1];
 	var myChart = arrayTable.transpose();
 	columnChartOptions = getDefaultColumnChartOptions(1);
 	columnChartOptions.vAxis.minValue = 0;
+	columnChartOptions.vAxis.format = "short";
 	chartData.push({ type: "column", options: columnChartOptions, data: myChart });
 
 
