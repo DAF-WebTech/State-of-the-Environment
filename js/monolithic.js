@@ -271,7 +271,8 @@ var soejs = {
             },
             width: "100%",
             fontSize: 12,
-            fontName: "Lato, sans-serif"
+            fontName: "Lato, sans-serif",
+            colors: ["#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043"]
         };
     },
     
@@ -286,7 +287,8 @@ var soejs = {
             showTip: true,
             width: "100%",
             fontSize: 12,
-            fontName: "Lato, sans-serif"
+            fontName: "Lato, sans-serif",
+            colors: ["#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043"]
         };
     },
     
