@@ -989,7 +989,7 @@ var soejs = {
         	needleColor: "black",
         	arcColors: arcColours,
         	arcDelimiters: arcDelimiters,
-        	rangeLabel: ["Poor", "Good"],
+        	rangeLabel: ["Very Poor", "Very Good"],
         	centralLabel: options.label || options.grade,
         	rangeLabelFontSize: options.fontSize || 20,
         	needleStartValue: needleStartValue,
