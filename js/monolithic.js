@@ -885,6 +885,7 @@ var soejs = {
     //  element: String # default is "gauge"; id of the element in which to draw the gauge (do not include #)
     //  label: String # default is options.grade; the label in the centre of the gauge
     //  fontSize: Numnber # default is 20; size of the font for grade and the range labels
+    //  rangeLabels: Array of two strings; labels at the end of the ranges of the gauge, default is ["Very Poor", "Very Good"]
     // }
     createGauge: function(options) {
         
@@ -989,7 +990,7 @@ var soejs = {
         	needleColor: "black",
         	arcColors: arcColours,
         	arcDelimiters: arcDelimiters,
-        	rangeLabel: ["Very Poor", "Very Good"],
+        	rangeLabel: options.rangeLabels || ["Very Poor", "Very Good"],
         	centralLabel: options.label || options.grade,
         	rangeLabelFontSize: options.fontSize || 20,
         	needleStartValue: needleStartValue,
