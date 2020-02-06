@@ -162,7 +162,10 @@ var getDefaultLineChartOptions = function(numberOfColours) {
 // makes assumptions about the structure of the table
 // so if your 2-d array does not fit the structure
 // you will need to make your own method
-var tableToHtml = function(table, hasFoot) {
+var tableToHtml = function(table, hasFoot, numberFormatFunc, numberFormatFuncArg) {
+	
+	numberFormatFunc = numberFormatFunc || Number.toLocaleString;
+	
 	var ret = {thead: "", tbody: ""};
 	ret.thead = "<th scope=col>" + table[0][0];
 	if (hasFoot)
@@ -175,7 +178,10 @@ var tableToHtml = function(table, hasFoot) {
 	for (var i = 1; i < table.length; ++i) {
 		ret.tbody += "<tr><th scope=row>" + table[i][0];
 		for (var j = 1; j < table[i].length; ++j) {
-			ret.tbody += "<td class=num>" + (table[i][j] == null ? "" : table[i][j].toLocaleString());
+			ret.tbody += "<td class=num>";
+			if (table[i][j] != null) {
+				ret.tbody += numberFormatFunc.apply(table[i][j], numberFormatFuncArg);
+			}//? "" : table[i][j].toLocaleString());
 			if (hasFoot)
 				if (table[i][j] != null)
 					sums[j-1] += table[i][j];
