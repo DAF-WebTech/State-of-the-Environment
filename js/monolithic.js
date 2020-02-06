@@ -254,6 +254,7 @@ var soejs = {
     map_bounds: {},
     showRegionColourFlag: false,
     firstHash: false,
+    hasDataFile: true,
 
 
     getDefaultColumnChartOptions: function() {
@@ -642,8 +643,7 @@ var soejs = {
         if (soejs.hasInlineData) {
             google.charts.setOnLoadCallback(populateIndicatorChartFunction);
         }
-        else {
-
+        else if (soejs.hasDataFile) {
             var url = String.format("/2020/datasets/indicator-{0}.csv", soejs.resourceId.replace(/\./g, "-"));
             Papa.parse(url, {
     	        download: true,
