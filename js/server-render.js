@@ -120,7 +120,8 @@ var getDefaultColumnChartOptions = function(numberOfColours) {
             title: "Year", // a default value, client to change if necessary
             titleTextStyle: {italic: false}
         },
-        height: 400,
+				height: 400,
+				legend: {},
         showTip: true,
         vAxis: {
             title: "", // client always supplies this
@@ -131,6 +132,29 @@ var getDefaultColumnChartOptions = function(numberOfColours) {
 				fontSize: 12,
 				fontName: "Lato, sans-serif"
     };
+}
+
+var getDefaultBarChartOptions = function() {
+	return { 
+		colors: getColours(7) ,
+		fontName: "Lato, sans-serif", 
+		fontSize: 12, 
+		hAxis: { 
+			titleTextStyle: { 
+				italic: false 
+			},
+			title: "needs a title" 
+		}, 
+		height: 400,
+		legend: {}, 
+		//showTip: true,
+		vAxis: { 
+			titleTextStyle: { 
+				italic: false 
+			}, 
+			title: "needs a title" 
+		}
+	}
 }
 
 var getDefaultPieChartOptions = function(numberOfColours) {
@@ -180,7 +204,7 @@ var tableToHtml = function(table, hasFoot, numberFormatFunc, numberFormatFuncArg
 		for (var j = 1; j < table[i].length; ++j) {
 			ret.tbody += "<td class=num>";
 			if (table[i][j] != null) {
-				ret.tbody += numberFormatFunc.apply(table[i][j], numberFormatFuncArg);
+				ret.tbody += numberFormatFunc.apply(table[i][j], numberFormatFuncArg).toLocaleString();
 			}//? "" : table[i][j].toLocaleString());
 			if (hasFoot)
 				if (table[i][j] != null)
