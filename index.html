@@ -37,7 +37,7 @@
 	</script>
 	<script id=chartdata type=application/json> </script> <script src=js/server-render.js> </script> <script>
 		var request = new XMLHttpRequest();
-		request.open("GET", "data/indicator-5-1-0-4.csv", false);  // `false` makes the request synchronous
+		request.open("GET", "data/indicator-3-4-0-1.csv", false);  // `false` makes the request synchronous
 		request.send(null);
 		var csv = "";
 		if (request.status === 200) {
@@ -45,8 +45,8 @@
 		}
 
 
-		/// start matrix server side ////////////////////////////////////////////////////////		
-		//var csv = '%frontend_asset_metadata_data-file^as_asset:asset_file_contents^replace:\r\n:\\n%';
+		//%%% start matrix server side %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		//%%%% var csv = '%frontend_asset_metadata_data-file^as_asset:asset_file_contents^replace:\r\n:\\n%';
 
 		var results = Papa.parse(
 			csv,
@@ -58,99 +58,115 @@
 
 		var dataHead = results.data.shift();
 		var data = results.data;
+		var latestYear = dataHead[dataHead.length-1];
+
+		var lastIndex = dataHead.length - 1;
 
 		///////////////////////////////////////////////////
-		var arrayTable = [["Year"], ["AM"], ["Off-Peak"], ["PM"]];
-		var qFirstIndex = 0;
-		for (var i = 2; dataHead[i].indexOf("Q") == -1; ++i) {
-			arrayTable[0].push(dataHead[i]);
-			arrayTable[1].push(data[0][i]);
-			arrayTable[2].push(data[1][i]);
-			arrayTable[3].push(data[2][i]);
-			qFirstIndex = i;
-		}
-		qFirstIndex++; // we'll use this in next chart
+		var records = {};
+		data.forEach(function(record) {
+			if (!records[record[0]])
+				records[record[0]] = {};
+			records[record[0]][record[1]] = record;
+		});
 
-		var heading = "Percentage of network with good travel time reliability";
+		var arrayHead = ["Sector", "Emissions (million tonnes)"];
+		var arrayBody = [];
+		for (record in records.Queensland) {
+			if (record != "All")
+				arrayBody.push([records.Queensland[record][1], records.Queensland[record][lastIndex]]);
+		}
+		arrayBody.sort(function(a, b) {
+			return a[0] > b[0] ? 1 : -1;
+		});
+		var arrayTable = [arrayHead].concat(arrayBody);
+		
+
+		var heading = "Proportion of Queensland's emissions by sector, " + latestYear;
 		var index = 0;
 		var region = "queensland";
 
-		var htmlTable = tableToHtml(arrayTable, false)
+		var htmlTable = tableToHtml(arrayTable, false, Number.prototype.toFixed, [3]);
 		print(String.format(regionInfoTemplate, region, heading, index++, htmlTable.thead, htmlTable.tbody));
 
-		var chart1 = arrayTable.transpose();
-		for (var i = 1; i < chart1.length; ++i)
-			for (var j = 1; j < chart1[i].length; ++j)
-				chart1[i][j] = chart1[i][j] / 100;
-		var chartOptions = getDefaultLineChartOptions();
-		chartOptions.vAxis.format = "percent";
-		chartData = [{ type: "line", options: chartOptions, data: chart1 }];
+		var chartOptions = getDefaultPieChartOptions();
+		var chartData = [{ type: "pie", options: chartOptions, data: arrayTable }];
 
 
 		//////////////////////////////////////////////////////////
-		arrayTable = [["Quarter"]];
-		var numberTripsIndex = [];
-		data.forEach(function (d, i) {
-			if (d[0] == "Number of trips") {
-				arrayTable.push([d[1]]);
-				numberTripsIndex.push(i);
-			}
+		arrayHead = ["Sector", "Qld", "NSW", "Vic", "WA", "SA", "NT", "Tas", "ACT"];
+		arrayBody = [];
+		Object.keys(records).forEach(function(state) {
+			Object.keys(records[state]).forEach(function(sector, i) {
+				if (state == "Queensland") //this is first, so we can initialise our rows
+					arrayBody.push([sector]);
+				arrayBody[i].push(records[state][sector][lastIndex]);
+			});	
 		});
-		for (var i = qFirstIndex; i < dataHead.length; ++i) {
-			arrayTable[0].push(dataHead[i]);
-
-			numberTripsIndex.forEach(function (j) {
-				arrayTable[j - 2].push(data[j][i]);
-			});
-
-		}
-
-		heading = "Millions of Trips by Public Transport Mode in SEQ";
-		htmlTable = tableToHtml(arrayTable, false, Number.prototype.toFixed, [2])
+		arrayBody.shift(); // get rid of "All"
+		arrayBody.sort(function(a, b) {
+			return a[0] > b[0] ? 1 : -1;
+		});		
+		arrayTable = [arrayHead].concat(arrayBody);
+		
+		heading = "Comparison of state and territory emissions by sector,  " + latestYear;
+		htmlTable = tableToHtml(arrayTable, false, Number.prototype.toFixed, [3]);
 		print(String.format(regionInfoTemplate, region, heading, index++, htmlTable.thead, htmlTable.tbody));
 
-		var chart2 = arrayTable.transpose();
-		chartOptions = getDefaultColumnChartOptions();
-		chartOptions.vAxis.title = "Trips (millions)";
-		chartData.push({ type: "column", options: chartOptions, data: chart2 });
+		chartOptions = getDefaultBarChartOptions();
+		chartOptions.hAxis.format = "#m";
+		chartOptions.hAxis.title = "Emissions (million tonnes of carbon dioxide equivalent)";
+		chartOptions.isStacked = true;
+		chartOptions.vAxis.title = "State";
+		chartData.push({ type: "bar", options: chartOptions, data: arrayTable.transpose() });
 
-
-		//////////////////////////////////////////////////////////////
-
-		var arrayTable = [arrayTable.shift()];
-		var percentTripsIndex = [];
-		data.forEach(function (d, i) {
-			if (d[0] == "Percentage of trips") {
-				arrayTable.push([d[1]]);
-				percentTripsIndex.push(i);
-			}
-		});
-		for (var i = qFirstIndex; i < dataHead.length; ++i) {
-			//arrayTable[0].push(dataHead[i]);
-
-			percentTripsIndex.forEach(function (j) {
-				arrayTable[j - 2 - numberTripsIndex.length].push(data[j][i]);
-			});
+		///////////////////////////////////////////////////////////////////////////////
+		var qldRecords = records.Queensland;
+		var allQld = qldRecords.All;
+		delete qldRecords.All;
+		arrayHead = ["Sector"].concat(dataHead.slice(2));
+		arrayHead = arrayHead.map(function(h) { return h.toString() }); // turns year Number types into strings
+		arrayBody = [];
+		for (sector in qldRecords) {
+			arrayBody.push(qldRecords[sector].slice(1));
 		}
+		arrayBody.sort(function(a, b) {
+			return a[2] < b[2] ? 1 : -1;
+		});		
 
-		heading = "On-Time Running by Public Transport Mode in SEQ — percentage of Trips";
-		htmlTable = tableToHtml(arrayTable, false, Number.prototype.toFixed, [2])
+		arrayTable = [arrayHead].concat(arrayBody);
+		console.log(arrayTable);
+		
+		heading = "Trends in Queensland emissions, by sector";
+		htmlTable = tableToHtml(arrayTable, false, Number.prototype.toFixed, [3]);
 		print(String.format(regionInfoTemplate, region, heading, index++, htmlTable.thead, htmlTable.tbody));
 
-		var chart3 = arrayTable.transpose();
-		for (var i = 1; i < chart3.length; ++i)
-			for (var j = 1; j < chart3[i].length; ++j)
-				chart3[i][j] = chart3[i][j] / 100;
 		chartOptions = getDefaultLineChartOptions();
-		chartOptions.vAxis.title = "Reliability";
-		chartOptions.vAxis.format = "percent";
-		chartData.push({ type: "line", options: chartOptions, data: chart3 });
+		chartOptions.isStacked = true;
+		chartOptions.vAxis.format = "#m";
+		chartOptions.vAxis.title = "Tonnes (million)";
+		chartData.push({ type: "line", options: chartOptions, data: arrayTable.transpose() });
 
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		arrayHead[0] = "";
+		arrayBody = ["Emissions (million tonnes)"];
+		for(var i = 2; i <= lastIndex; ++i)
+			arrayBody.push(allQld[i])
+		arrayTable = [arrayHead, arrayBody];
+		heading = "Total Queensland emissions";
+		htmlTable = tableToHtml(arrayTable, false, Number.prototype.toFixed, [3]);
+		print(String.format(regionInfoTemplate, region, heading, index++, htmlTable.thead, htmlTable.tbody));
 
+		arrayTable[0][0] = "Year";
+		chartOptions = getDefaultLineChartOptions();
+		chartOptions.legend.position = "none";
+		chartOptions.vAxis.format = "#m";
+		chartOptions.vAxis.minValue = 0;
+		chartOptions.vAxis.title = "Tonnes (million)";
+		chartData.push({ type: "line", options: chartOptions, data: arrayTable.transpose() });
 
-
-		//print("<script id=chartdata type=application/json>" + JSON.stringify(chartData) + "</" + "script>");
-		// end matrix server side /////////////////////////////////////////////////
+		//%%%% print("<script id=chartdata type=application/json>" + JSON.stringify(chartData) + "</" + "script>");
+		//%%%% end matrix server side %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
@@ -186,6 +202,8 @@
 						break;
 					case "column":
 						var chart = new google.visualization.ColumnChart(document.getElementById("chart_" + i));
+					case "bar":
+						var chart = new google.visualization.BarChart(document.getElementById("chart_" + i));
 				}
 
 
