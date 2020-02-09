@@ -883,7 +883,7 @@ var soejs = {
     //  theme: String # required, one of "biodiversity", "heritage", "pollution", "climate", "liveability"; anything else has undefined effects
     //  grade: String # default is "D-" if segements==4, or "E" if segments==5
     //  element: String # default is "gauge"; id of the element in which to draw the gauge (do not include #)
-    //  label: String # default is options.grade; the label in the centre of the gauge
+    //  label: deprecated, will be ignored [String # default is options.grade; the label in the centre of the gauge]
     //  fontSize: Numnber # default is 20; size of the font for grade and the range labels
     //  rangeLabels: Array of two strings; labels at the end of the ranges of the gauge, default is ["Very Poor", "Very Good"]
     // }
@@ -991,7 +991,7 @@ var soejs = {
         	arcColors: arcColours,
         	arcDelimiters: arcDelimiters,
         	rangeLabel: options.rangeLabels || ["Very Poor", "Very Good"],
-        	centralLabel: options.label || options.grade,
+        	centralLabel: "" /*options.label || options.grade */,
         	rangeLabelFontSize: options.fontSize || 20,
         	needleStartValue: needleStartValue,
         	arcPadding: 6,
