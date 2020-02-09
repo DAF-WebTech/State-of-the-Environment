@@ -991,7 +991,7 @@ var soejs = {
         	arcColors: arcColours,
         	arcDelimiters: arcDelimiters,
         	rangeLabel: options.rangeLabels || ["Very Poor", "Very Good"],
-        	centralLabel: "" /*options.label || options.grade */,
+        	centralLabel: " " /*options.label || options.grade */,
         	rangeLabelFontSize: options.fontSize || 20,
         	needleStartValue: needleStartValue,
         	arcPadding: 6,
