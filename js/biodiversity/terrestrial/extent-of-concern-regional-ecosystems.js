@@ -87,7 +87,7 @@ chartData.push({ type: "column", options: columnChartOptions, data: arrayTable }
 
 ///////////////////////////////////////////////////
 // 3. line for qld
-var arrayTable = [["Status"], ["Endangered"], ["Of Concern"], ["No concern at present"]];
+var arrayTable = [["Status"], ["Endangered"], ["No concern at present"], ["Of Concern"]];
 var years = headData.slice(4);
 years.forEach(function(y) {
 	arrayTable[0].push(y.toString());
