@@ -188,7 +188,7 @@ var getDefaultLineChartOptions = function(numberOfColours) {
 // you will need to make your own method
 var tableToHtml = function(table, hasFoot, numberFormatFunc, numberFormatFuncArg) {
 	
-	numberFormatFunc = numberFormatFunc || Number.toLocaleString;
+	numberFormatFunc = numberFormatFunc || Number.prototype.toLocaleString;
 	
 	var ret = {thead: "", tbody: ""};
 	ret.thead = "<th scope=col>" + table[0][0];
