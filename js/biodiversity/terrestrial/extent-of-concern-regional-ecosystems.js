@@ -78,7 +78,7 @@ var heading = String.format("Proportion area of biodiversity status, {0}", lates
 print(String.format(regionInfoTemplate, "queensland", heading, index++, htmlTable.thead, htmlTable.tbody, htmlTable.tfoot));
 
 var columnChartOptions = getDefaultColumnChartOptions();
-columnChartOptions.vAxis.title = "Regional Ecosystems";
+columnChartOptions.vAxis.title = "Hectares";
 columnChartOptions.vAxis.format = "short";
 columnChartOptions.hAxis.title = "Bioregion";
 columnChartOptions.isStacked = true;
