@@ -1,0 +1,255 @@
+<html>
+
+<head>
+	<style>
+		table,
+		thead,
+		tr,
+		th,
+		tbody,
+		td,
+		tfoot {
+			border: 1px black solid;
+		}
+
+		th,
+		td {
+			text-align: left;
+		}
+
+		th.num,
+		td.num {
+			text-align: right
+		}
+	</style>
+	<title>%frontend_asset_name%</title>
+
+</head>
+
+<body>
+	<div id=pre>i'm not here</div>
+
+
+	<div id=region_0 class="region-info region-queensland">
+		<h4 v-text="heading"></h4>
+		<ul class=chart-tabs data-index=0>
+			<li class=active><span>Chart</span></li>
+			<li><span>Table</span></li>
+		</ul>
+		<div class=chart-table>
+			<div id=chart_0 class=chart></div>
+			<div id=table_0 class="responsive-table sticky inactive">
+				<table class="indicators zebra">
+					<thead>
+						<tr>
+							<th scope=col v-text="data[0][0]">
+							<th scope=col class=num v-text="data[0][1]">
+					<tbody>
+						<tr v-for="tr in data.slice(1)">
+							<td scope=row v-text="tr[0]">
+							<td scope=row class=num v-text="tr[1].toFixed(3)">
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div id=region_1 class="region-info region-queensland">
+		<h4 v-text="heading"></h4>
+		<ul class=chart-tabs data-index=1>
+			<li class=active><span>Chart</span></li>
+			<li><span>Table</span></li>
+		</ul>
+		<div class=chart-table>
+			<div id=chart_1 class=chart></div>
+			<div id=table_1 class="responsive-table sticky inactive">
+				<table class="indicators zebra">
+					<thead>
+						<tr>
+							<th scope=col v-text="data[0][0]">
+							<th scope=col class=num v-for="th in data[0].slice(1)" v-text="th">
+					<tbody>
+						<tr v-for="tr in data.slice(1)">
+							<td scope=row v-text="tr[0]">
+							<td scope=row class=num v-for="td in tr.slice(1)" v-text="td.toFixed(3)">
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div id=region_2 class="region-info region-queensland">
+		<h4 v-text="heading"></h4>
+		<div class=chart-table>
+			<div id=table_2 class="responsive-table sticky inactive">
+				<table class="indicators zebra">
+					<thead>
+						<tr>
+							<th scope=col>Year<th scope=col class=num>Emissions (million tonnes)
+					<tbody>
+						<tr v-for="tr in data">
+							<td scope=row v-text="tr.year">
+							<td scope=row class=num v-text="tr.value.toFixed(3)">
+				</table>
+			</div>
+		</div>
+	</div>
+
+
+
+	<script>
+		// functions to emulate matrix ssjs
+		function print(regionInfo) {
+			document.getElementById(" pre").innerHTML += regionInfo;
+		} </script>
+
+	<script id=chartdata type=application/json></script>
+	<script src=js/server-render.js> </script>
+	<!-- code that goes into matrix server side js block -->
+
+	<script src="https://www.gstatic.com/charts/loader.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+	<script>
+		var request = new XMLHttpRequest();
+		request.open("GET", "data/indicator-3-4-0-3.csv", false);  // `false` makes the request synchronous
+		request.send(null);
+		var csv = "";
+		if (request.status === 200) {
+			csv = request.responseText;
+		}
+
+
+		//%%% start matrix server side %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		//%%%% var csv = '%frontend_asset_metadata_data-file^as_asset:asset_file_contents^replace:\r\n:\\n%';
+
+		var results = Papa.parse(
+			csv,
+			{
+				skipEmptyLines: true,
+				dynamicTyping: true,
+			}
+		);
+		var headRow = results.data.shift().map(function(th){return th.toString();});
+		var totalRow = results.data.pop();
+
+		console.log("data from papaparse", results);
+
+		///////////////////////////////////////////////////
+
+		var chart = results.data.map(function (record) {
+			return [record[0], record[record.length - 1]];
+		});
+
+		var head = ["Category", "Emissions (million tonnes)"];
+		chart.unshift(head);
+
+		var charts = [
+			{
+				data: chart,
+				type: "pie",
+				options: getDefaultPieChartOptions(),
+				heading: "Proportion of Queensland’s transport emissions by category, " + results.data[0][results.data.length - 1]
+			}
+		];
+
+		//////////////////////////////////////////////////////////////////////////////////////
+
+// this one shows in what order we do things
+// get the data from the csv
+// compile the table that will be the chart data 
+// transpose the table
+// if necessary, indicate to populateIndicatorCharts that he table needs to be transformed back
+
+		chart = results.data;
+		chart.unshift(headRow);
+		chart[0][0].type = "string";
+		chart = chart.transpose();
+		var options = getDefaultAreaChartOptions();
+		options.vAxis.title = "Tonnes (millions)"; 
+		charts.push(
+			{
+				data: chart,
+				transposeForTable: true,
+				type: "area",
+				options: options,
+				heading: "Trends in Queensland’s transport emissions, by category"
+
+			}
+		);
+
+//////////////////////////////////////////////
+			data = totalRow.slice(1).map ( function(row, i) {
+				return {year: headRow[i+1], value: row};
+			});
+			var table = 
+			{
+				data: data,
+				heading: "Queensland’s total transport emissions"
+
+			};
+
+		////////////////////////////////////////////////////////////////////////////////////////
+
+
+		google.charts.load("current", { packages: ["corechart"] });
+		google.charts.setOnLoadCallback(populateIndicatorCharts);
+
+		soejs = {
+			chartsLoaded3: function () {
+				console.log("chart drawn");
+			}
+		};
+
+		function populateIndicatorCharts() {
+
+			soejs.num_charts = charts.length;
+			charts.forEach(function (cd, i) {
+
+				cd.index = i;
+
+				var data = google.visualization.arrayToDataTable(cd.data);
+
+				if (cd.transposeForTable)
+					cd.data = cd.data.transpose();
+				new Vue({
+					el: "#region_" + i,
+					data: cd
+				});
+
+				switch (cd.type) {
+					case "pie":
+						var chart = new google.visualization.PieChart(document.getElementById("chart_" + i));
+						break;
+					case "line":
+						var chart = new google.visualization.LineChart(document.getElementById("chart_" + i));
+						break;
+					case "column":
+						var chart = new google.visualization.ColumnChart(document.getElementById("chart_" + i));
+						break;
+					case "bar":
+						var chart = new google.visualization.BarChart(document.getElementById("chart_" + i));
+						break;
+					case "area":
+						var chart = new google.visualization.AreaChart(document.getElementById("chart_" + i));
+						break;
+				}
+
+
+				google.visualization.events.addListener(chart, "ready", soejs.chartsLoaded3);
+				chart.draw(data, cd.options);
+
+
+			});
+
+			new Vue({
+					el: "#region_2",
+					data: table
+				});
+
+
+		}
+
+
+	</script>
+</body>
+
+</html>
