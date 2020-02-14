@@ -84,6 +84,7 @@ chart1 = arrayTable.transpose();
 var columnChartOptions = getDefaultColumnChartOptions(1);
 columnChartOptions.vAxis.minValue = 0;
 columnChartOptions.vAxis.format = "short";
+columnChartOptions.vAxis.title = "Hectares";
 chartData = [{ type: "column", options: columnChartOptions, data: chart1 }];
 
 
@@ -136,6 +137,7 @@ regions.forEach(function (region, i) {
 	columnChartOptions = getDefaultColumnChartOptions(1);
 	columnChartOptions.vAxis.minValue = 0;
 	columnChartOptions.vAxis.format = "short";
+	columnChartOptions.vAxis.title = "Hectares";
 	chartData.push({ type: "column", options: columnChartOptions, data: myChart });
 
 
