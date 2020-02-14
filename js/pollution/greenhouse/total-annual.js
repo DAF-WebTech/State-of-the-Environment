@@ -1,5 +1,6 @@
 var csv = '%frontend_asset_metadata_data-file^as_asset:asset_file_contents^replace:\r\n:\\n%';
 
+
 var results = Papa.parse(
 	csv,
 	{
@@ -15,6 +16,8 @@ var latestYear = dataHead[dataHead.length - 1];
 var lastIndex = dataHead.length - 1;
 
 ///////////////////////////////////////////////////
+// pie
+
 var records = {};
 data.forEach(function (record) {
 	if (!records[record[0]])
@@ -29,12 +32,12 @@ for (record in records.Queensland) {
 		arrayBody.push([records.Queensland[record][1], records.Queensland[record][lastIndex]]);
 }
 arrayBody.sort(function (a, b) {
-	return a[0] > b[0] ? 1 : -1;
+	return a[1] < b[1] ? 1 : -1;
 });
 var arrayTable = [arrayHead].concat(arrayBody);
 
 
-var heading = "Proportion of Queensland's emissions by sector, " + latestYear;
+var heading = "Proportion of Queensland’s emissions by sector, " + latestYear;
 var index = 0;
 var region = "queensland";
 
@@ -46,6 +49,7 @@ var chartData = [{ type: "pie", options: chartOptions, data: arrayTable }];
 
 
 //////////////////////////////////////////////////////////
+// bar
 arrayHead = ["Sector", "Qld", "NSW", "Vic", "WA", "SA", "NT", "Tas", "ACT"];
 arrayBody = [];
 Object.keys(records).forEach(function (state) {
@@ -57,7 +61,7 @@ Object.keys(records).forEach(function (state) {
 });
 arrayBody.shift(); // get rid of "All"
 arrayBody.sort(function (a, b) {
-	return a[0] > b[0] ? 1 : -1;
+	return a[1] < b[1] ? 1 : -1;
 });
 arrayTable = [arrayHead].concat(arrayBody);
 
@@ -66,13 +70,13 @@ htmlTable = tableToHtml(arrayTable, false, Number.prototype.toFixed, [3]);
 print(String.format(regionInfoTemplate, region, heading, index++, htmlTable.thead, htmlTable.tbody));
 
 chartOptions = getDefaultBarChartOptions();
-chartOptions.hAxis.format = "#m";
 chartOptions.hAxis.title = "Emissions (million tonnes of carbon dioxide equivalent)";
 chartOptions.isStacked = true;
 chartOptions.vAxis.title = "State";
 chartData.push({ type: "bar", options: chartOptions, data: arrayTable.transpose() });
 
 ///////////////////////////////////////////////////////////////////////////////
+// line
 var qldRecords = records.Queensland;
 var allQld = qldRecords.All;
 delete qldRecords.All;
@@ -83,11 +87,11 @@ for (sector in qldRecords) {
 	arrayBody.push(qldRecords[sector].slice(1));
 }
 arrayBody.sort(function (a, b) {
-	return a[2] < b[2] ? 1 : -1;
+	return a[a.length - 1] < b[b.length - 1] ? 1 : -1;
 });
 
 arrayTable = [arrayHead].concat(arrayBody);
-console.log(arrayTable);
+arrayTable = arrayTable.transpose();
 
 heading = "Trends in Queensland emissions, by sector";
 htmlTable = tableToHtml(arrayTable, false, Number.prototype.toFixed, [3]);
@@ -95,26 +99,18 @@ print(String.format(regionInfoTemplate, region, heading, index++, htmlTable.thea
 
 chartOptions = getDefaultLineChartOptions();
 chartOptions.isStacked = true;
-chartOptions.vAxis.format = "#m";
 chartOptions.vAxis.title = "Tonnes (million)";
-chartData.push({ type: "line", options: chartOptions, data: arrayTable.transpose() });
+chartData.push({ type: "line", options: chartOptions, data: arrayTable });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-arrayHead[0] = "";
-arrayBody = ["Emissions (million tonnes)"];
+// none
+arrayTable = [["Year", "Emissions (million tonnes)"]];
 for (var i = 2; i <= lastIndex; ++i)
-	arrayBody.push(allQld[i])
-arrayTable = [arrayHead, arrayBody];
+	arrayTable.push([dataHead[i].toString(), allQld[i]]);
+console.log(arrayTable);
 heading = "Total Queensland emissions";
 htmlTable = tableToHtml(arrayTable, false, Number.prototype.toFixed, [3]);
-print(String.format(regionInfoTemplate, region, heading, index++, htmlTable.thead, htmlTable.tbody));
+print(String.format(regionInfoTemplateTableOnly, region, heading, index++, htmlTable.thead, htmlTable.tbody));
 
-arrayTable[0][0] = "Year";
-chartOptions = getDefaultLineChartOptions();
-chartOptions.legend.position = "none";
-chartOptions.vAxis.format = "#m";
-chartOptions.vAxis.minValue = 0;
-chartOptions.vAxis.title = "Tonnes (million)";
-chartData.push({ type: "line", options: chartOptions, data: arrayTable.transpose() });
 
 print("<script id=chartdata type=application/json>" + JSON.stringify(chartData) + "</" + "script>");

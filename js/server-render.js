@@ -224,3 +224,17 @@ var regionInfoTemplate = "\n\
         </div>\n\
     </div>\n\
 </div>\n";
+
+var regionInfoTemplateTableOnly = "\n\
+<div class=\"region-info region-{0} {6}\" {7}>\n\
+    <h4>{1}</h4>\n\
+    <div class=chart-table>\n\
+        <div id=table_{2} class=\"responsive-table sticky inactive\">\n\
+            <table class=\"indicators zebra\">\n\
+    	        <thead><tr>{3}\n\
+            	<tbody>{4}\n\
+            	{5}\
+            </table>\n\
+        </div>\n\
+    </div>\n\
+</div>\n";
