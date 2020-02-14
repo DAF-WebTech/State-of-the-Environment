@@ -145,6 +145,10 @@ var getDefaultAreaChartOptions = function () {
 	return getDefaultColumnChartOptions();
 }
 
+var getDefaultComboChartOptions = function () {
+	return getDefaultColumnChartOptions();
+}
+
 var getDefaultLineChartOptions = function () {
 	var retVal = this.getDefaultColumnChartOptions();
 	retVal.pointSize = 3;
