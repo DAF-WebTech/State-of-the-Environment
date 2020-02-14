@@ -62,6 +62,12 @@ if (! String.prototype.contains) {
 	};
 }
 
+if (! String.prototype.toKebabCase) {
+	String.prototype.toKebabCase = function () {
+		return this.toLowerCase().replace(/ /g, "-");
+	};
+}
+
 if (!NodeList.prototype.forEach) {
     NodeList.prototype.forEach = function(fn, scope) {
         for(var i = 0, len = this.length; i < len; ++i) {
