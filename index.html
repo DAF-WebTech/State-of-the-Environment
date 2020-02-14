@@ -86,8 +86,10 @@
 
 
 	<script>
+		"use strict";
+
 		var request = new XMLHttpRequest();
-		request.open("GET", "/data/indicator-3-4-0-3.csv", false);  // `false` makes the request synchronous
+		request.open("GET", "/data/indicator-3-4-0-4.csv", false);  // `false` makes the request synchronous
 		request.send(null);
 		var csv = "";
 		if (request.status === 200) {
@@ -126,12 +128,15 @@
 		var head = ["Category", "Emissions (million tonnes)"];
 		tableData.unshift(head);
 
+		var options = getDefaultPieChartOptions();
+		options.sliceVisibilityThreshold = 0;
+
 
 		var tables = [{
 			rows: tableData,
 			type: "pie",
-			options: getDefaultPieChartOptions(),
-			heading: "Proportion of Queensland’s transport emissions by category, " + headRow[headRow.length - 1],
+			options: options,
+			heading: "Proportion of Queensland’s agriculture emissions by category, " + headRow[headRow.length - 1],
 			hasChart: true,
 			index: index++
 		}];
@@ -139,26 +144,26 @@
 
 		//////////////////////////////////////////////////////////////////////////////////////
 
-		chart = results.data;
+		var chart = results.data;
 		chart.unshift(headRow);
 		chart = chart.transpose();
 
-		var options = getDefaultAreaChartOptions();
+		options = getDefaultLineChartOptions();
 		options.vAxis.title = "Tonnes (millions)";
 
 
 		tables.push({
 			rows: chart,
-			heading: "Trends in Queensland’s transport emissions, by category",
+			heading: "Trends in Queensland’s agriculture emissions, by category",
 			hasChart: true,
 			index: index++,
-			type: "area",
+			type: "line",
 			options: options,
 		});
 
 
 		//////////////////////////////////////////////
-		data = totalRow.slice(1).map(function (row, i) {
+		var data = totalRow.slice(1).map(function (row, i) {
 			return [headRow[i + 1], row];
 		});
 		data.unshift(["Year", "Emissions (million tonnes)"]);
@@ -166,7 +171,7 @@
 		tables.push(
 			{
 				rows: data,
-				heading: "Queensland’s total transport emissions",
+				heading: "Queensland’s total agriculture emissions",
 				hasChart: false,
 				index: index++
 			});
