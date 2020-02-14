@@ -94,6 +94,10 @@ String.format = function (format, args) {
 };
 
 /*
+these were my corresponding light colors
+google material charts
+would set out colours in dark/light pairs
+if there were more than 7 colours needed 
 var getColours = function (num) {
 	var dark = ["#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043"]; //*darker*
 	var light = ["#5e97f5", "#e06055", "#f5bf26", "#33ab71", "#b762c6", "#26b8ca", "#ff855f"]; //*lighter*
@@ -115,6 +119,9 @@ var chartColours = ["#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00a
 var getDefaultColumnChartOptions = function () {
 
 	return {
+		colors: chartColours,
+		fontName: "Lato, sans-serif",
+		fontSize: 12,
 		hAxis: {
 			title: "Year", // a default value, client to change if necessary
 			titleTextStyle: { italic: false }
@@ -127,69 +134,15 @@ var getDefaultColumnChartOptions = function () {
 			titleTextStyle: { italic: false }
 		},
 		width: "100%",
-		colors: chartColours,
-		fontSize: 12,
-		fontName: "Lato, sans-serif"
 	};
 }
 
 var getDefaultBarChartOptions = function () {
-	return {
-		colors: getColours(7),
-		fontName: "Lato, sans-serif",
-		fontSize: 12,
-		hAxis: {
-			titleTextStyle: { italic: false },
-			title: "needs a title"
-		},
-		height: 400,
-		legend: {},
-		//showTip: true,
-		vAxis: {
-			titleTextStyle: { italic: false },
-			title: "needs a title"
-		}
-	}
+	return getDefaultColumnChartOptions();
 }
 
 var getDefaultAreaChartOptions = function () {
-	return {
-		colors: chartColours,
-		fontName: "Lato, sans-serif",
-		fontSize: 12,
-		hAxis: {
-			titleTextStyle: {
-				italic: false
-			},
-			title: "Year"
-		},
-		height: 400,
-		legend: {},
-		vAxis: {
-			titleTextStyle: {
-				italic: false
-			},
-			title: "needs a title"
-		}
-	};
-}
-
-var getDefaultPieChartOptions = function () {
-
-
-	return {
-		chartArea: {
-			width: "80%",
-			height: "80%"
-		},
-		height: 250,
-		//is3D: true,
-		showTip: true,
-		width: "100%",
-		colors: chartColours,
-		fontSize: 12,
-		fontName: "Lato, sans-serif"
-	};
+	return getDefaultColumnChartOptions();
 }
 
 var getDefaultLineChartOptions = function () {
@@ -197,6 +150,20 @@ var getDefaultLineChartOptions = function () {
 	retVal.pointSize = 3;
 	return retVal;
 }
+
+var getDefaultPieChartOptions = function () {
+
+	return {
+		colors: chartColours,
+		fontName: "Lato, sans-serif",
+		fontSize: 12,
+		height: 400,
+		//is3D: true,
+		showTip: true,
+		width: "100%",
+	};
+}
+
 
 // makes assumptions about the structure of the table
 // so if your 2-d array does not fit the structure

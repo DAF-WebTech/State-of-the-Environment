@@ -27,24 +27,67 @@
 </head>
 
 <body>
-	<div id=pre></div>
 
 
 
-	<script>
-		// functions to emulate matrix ssjs
-		function print(regionInfo) {
-			document.getElementById("pre").innerHTML += regionInfo;
-		}
+	<!-------------------------------------------------------
+	goes on client 
+--------------------------------------------->
+	<div id=app>
+		<regioninfo v-for="table in tables" :table=table></regioninfo>
+		<pre>{{ $data }}</pre>
+	</div>
 
-	</script>
+
+	<template id=region-template>
+		<div :id="'region_' + table.index" class="region-info region-queensland">
+			<h4 v-text="table.heading"></h4>
+			<ul class=chart-tabs :data-index=table.index v-if=table.hasChart>
+				<li class=active><span>Chart</span>
+				<li><span>Table</span>
+			</ul>
+			<div class=chart-table>
+				<div :id="'chart_' + table.index" class=chart v-if=table.hasChart></div>
+				<div :id="'table_' + table.index" class="responsive-table sticky inactive">
+					<table class="indicators zebra">
+						<thead>
+							<tr>
+								<th v-for="(th, i) in table.rows[0]" scope=col :class="{num: i > 0}" v-text=th>
+						<tbody>
+							<tr v-for="tr in table.rows.slice(1)">
+								<th scope=row v-text=tr[0]>
+								<td v-for="td in tr.slice(1)" class=num v-text=td.toFixed(3)>
+
+					</table>
+				</div>
+			</div>
+		</div>
+
+		</div>
+	</template>
+
+	<pre id=pre></pre>
+	<div id=tableData></div>
+	<!---------------------------------------------
+	end goes on client
+	----------------------------------------------->
 
 	<script id=chartdata type=application/json></script>
 	<script src=/js/server-render.js> </script>
-	<!-- code that goes into matrix server side js block -->
+
+	<script>
+		// function to emulate matrix ssjs
+		function print(regionInfo) {
+			document.getElementById("pre").textContent = regionInfo;
+			document.getElementById("tableData").innerHTML = regionInfo;
+		}
+	</script>
+
+
+
 	<script>
 		var request = new XMLHttpRequest();
-		request.open("GET", "/data/indicator-5-2-0-8.csv", false);  // `false` makes the request synchronous
+		request.open("GET", "/data/indicator-3-4-0-3.csv", false);  // `false` makes the request synchronous
 		request.send(null);
 		var csv = "";
 		if (request.status === 200) {
@@ -56,190 +99,159 @@
 		//%%%% var csv = '%frontend_asset_metadata_data-file^as_asset:asset_file_contents^replace:\r\n:\\n%';
 
 
-var results = Papa.parse(
-	csv,
-	{
-		skipEmptyLines: true,
-		dynamicTyping: true
-	}
-);
-
-var dataHead = results.data.shift();
-var data = results.data;
-
-///////////////////////////////////////////////////
-var arrayTable = [["", "1999", "current"]];
-arrayTable.push([data[2][0], data[2][14], data[5][14]]);
-arrayTable.push([data[3][0], data[3][14], data[6][14]]);
-arrayTable.push([data[1][0], data[1][14], data[4][14]]);
-
-
-var heading = "Queensland rural area growth between 1999 and Current (current data is composed of regional data sourced at different times)";
-var index = 0;
-var region = "queensland";
-
-var htmlTable = tableToHtml(arrayTable, false)
-print(String.format(regionInfoTemplate, region, heading, index++, htmlTable.thead, htmlTable.tbody));
-
-arrayTable[0][0] = "Year";
-chart1 = arrayTable.transpose();
-var columnChartOptions = getDefaultColumnChartOptions();
-columnChartOptions.isStacked = true;
-chartData = [{ type: "column", options: columnChartOptions, data: chart1 }];
-
-
-
-
-/////////////////////////////////////////////////////////////////////////////
-var totalQueenslandRuralAreas = data[4][14] + data[5][14] + data[6][14];
-var totalQueenslandArea = data[0][14];
-var queenslandNonRuralArea = totalQueenslandArea - totalQueenslandRuralAreas;
-
-arrayTable = [["", "Non Rural", "Rural Land in Intensive Use", "Rural Land in Extensive Use", "Rural Land not Settled"]];
-arrayTable.push(["Hectares", queenslandNonRuralArea, data[4][14], data[5][14], data[6][14]]);
-heading = "Queensland rural area as a proportion of total state area";
-
-htmlTable = tableToHtml(arrayTable, false)
-print(String.format(regionInfoTemplate, region, heading, index++, htmlTable.thead, htmlTable.tbody));
-
-arrayTable[0][0] = "Year";
-var chart2 = arrayTable.transpose();
-
-var pieChartOptions = getDefaultPieChartOptions();
-chartData.push({ type: "pie", options: pieChartOptions, data: chart2 });
-
-
-//////////////////////////////////////////////////////////////////////
-
-print("<h3>Rural area growth between 1999 and current by region (current data is composed of regional data sourced at different times).</h3>");
-
-var regions = dataHead.slice(2, dataHead.length - 1);
-
-print("<ul id=regionCheckboxes>");
-regions.forEach(function (r, i) {
-	print(String.format("<li><input type=checkbox value=\"{0}\" id=checkbox_{0} {2} onchange=\"showHideChart(this)\" /><label for=checkbox_{0}>{1}</label>", r.toKebabCase(), r, i == 0 ? "checked" : ""));
-});
-print("</ul>");
-
-
-regions.forEach(function (region, i) {
-
-	// this first one goes inside the queensland region, selectable by the checkboxes
-	arrayTable = [["", "1999", data[7][i + 2]]];
-	arrayTable.push([data[2][0], data[2][i + 2], data[5][i + 2]]);
-	arrayTable.push([data[3][0], data[3][i + 2], data[6][i + 2]]);
-	arrayTable.push([data[1][0], data[1][i + 2], data[4][i + 2]]);
-
-	heading = String.format("{0} urban area growth between 1999 and {1}", region, data[7][i + 2]);
-
-	htmlTable = tableToHtml(arrayTable, false);
-	var extraClass = "region-" + region.toKebabCase();
-	if (i > 0)
-		extraClass += " initial-hide";
-	print(String.format(regionInfoTemplate, "queensland", heading, index++, htmlTable.thead, htmlTable.tbody, "", extraClass));
-
-	arrayTable[0][0] = "Year";
-	arrayTable[0][2] = data[7][i + 1];
-	var myChart = arrayTable.transpose();
-	columnChartOptions = getDefaultColumnChartOptions();
-	columnChartOptions.vAxis.title = "Hectares";
-	columnChartOptions.vAxis.format = "short";
-	columnChartOptions.isStacked = true;
-	chartData.push({ type: "column", options: columnChartOptions, data: myChart });
-
-	// we also put it into its own div
-	print(String.format(regionInfoTemplate, region.toKebabCase(), heading, index++, htmlTable.thead, htmlTable.tbody));
-	chartData.push({ type: "column", options: columnChartOptions, data: myChart });
-
-	///////////////////////////////////////
-	//the rest go in each div for region
-	var regionNonRuralArea = data[0][i + 2] - (data[4][i + 2] + data[5][i + 2] + data[6][i + 2]);
-
-	arrayTable = [["", "Non Rural", "Rural Land in Intensive Use", "Rural Land in Extensive Use", "Rural Land not Settled"]];
-	arrayTable.push(["Hectares", regionNonRuralArea, data[4][i + 2], data[5][i + 2], data[6][i + 2]]);
-	heading = String.format("{0} Rural area as a proportion of total Region area in {1}", region, data[7][i + 2]);
-
-	htmlTable = tableToHtml(arrayTable, false)
-	print(String.format(regionInfoTemplate, region, heading, index++, htmlTable.thead, htmlTable.tbody));
-
-	arrayTable[0][0] = "Year";
-	var chart2 = arrayTable.transpose();
-
-	var pieChartOptions = getDefaultPieChartOptions();
-	pieChartOptions.sliceVisibilityThreshold = 0;
-	chartData.push({ type: "pie", options: pieChartOptions, data: chart2 });
-
-
-
-});
-
-
-
-
-print("<script id=chartdata type=application/json>" + JSON.stringify(chartData) + "</" + "script>");
-
-
-
-		//%%%% print("<script id=chartdata type=application/json>" + JSON.stringify(chartData) + "</" + "script>");
-		//%%%% end matrix server side %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
-		document.getElementById("chartdata").textContent = JSON.stringify(chartData);
-//////////////////////////////////////////////////////////////////////////////////////
-
-	</script>
-	<script src="https://www.gstatic.com/charts/loader.js"></script>
-
-	<script>
-
-		google.charts.load("current", { packages: ["corechart"] });
-		google.charts.setOnLoadCallback(populateIndicatorCharts);
-
-		soejs = {
-			chartsLoaded3: function () {
-				console.log("chart drawn");
+		var results = Papa.parse(
+			csv,
+			{
+				skipEmptyLines: true,
+				dynamicTyping: true,
 			}
-		};
+		);
+		var headRow = results.data.shift().map(function (th) { return th.toString(); });
+		var totalRow = results.data.pop();
 
-		function populateIndicatorCharts() {
+		console.log("data from papaparse", results);
 
-			var chartData = JSON.parse(document.getElementById("chartdata").textContent);
-			soejs.num_charts = chartData.length;
-			chartData.forEach(function (cd, i) {
+		var index = 0;
 
-				var data = google.visualization.arrayToDataTable(cd.data);
+		///////////////////////////////////////////////////
 
-				switch (cd.type) {
-					case "pie":
-						var chart = new google.visualization.PieChart(document.getElementById("chart_" + i));
-						break;
-					case "line":
-						var chart = new google.visualization.LineChart(document.getElementById("chart_" + i));
-						break;
-					case "column":
-						var chart = new google.visualization.ColumnChart(document.getElementById("chart_" + i));
-						break;
-					case "bar":
-						var chart = new google.visualization.BarChart(document.getElementById("chart_" + i));
-						break;
-					case "area":
-						var chart = new google.visualization.AreaChart(document.getElementById("chart_" + i));
-				}
+		var tableData = results.data.map(function (record) {
+			return [record[0], record[record.length - 1]];
+		});
+
+		tableData.sort(function (a, b) {
+			return a[1] < b[1] ? 1 : -1;
+		});
+
+		var head = ["Category", "Emissions (million tonnes)"];
+		tableData.unshift(head);
 
 
-				google.visualization.events.addListener(chart, "ready", soejs.chartsLoaded3);
-				chart.draw(data, cd.options);
+		var tables = [{
+			rows: tableData,
+			type: "pie",
+			options: getDefaultPieChartOptions(),
+			heading: "Proportion of Queensland’s transport emissions by category, " + headRow[headRow.length - 1],
+			hasChart: true,
+			index: index++
+		}];
 
 
+		//////////////////////////////////////////////////////////////////////////////////////
+
+		chart = results.data;
+		chart.unshift(headRow);
+		chart = chart.transpose();
+
+		var options = getDefaultAreaChartOptions();
+		options.vAxis.title = "Tonnes (millions)";
+
+
+		tables.push({
+			rows: chart,
+			heading: "Trends in Queensland’s transport emissions, by category",
+			hasChart: true,
+			index: index++,
+			type: "area",
+			options: options,
+		});
+
+
+		//////////////////////////////////////////////
+		data = totalRow.slice(1).map(function (row, i) {
+			return [headRow[i + 1], row];
+		});
+		data.unshift(["Year", "Emissions (million tonnes)"]);
+
+		tables.push(
+			{
+				rows: data,
+				heading: "Queensland’s total transport emissions",
+				hasChart: false,
+				index: index++
 			});
 
 
 
-		}
+
+		print("<script id=tabledata type=application/json>" + JSON.stringify(tables) + "</" + "script>");
+		//%%%% end matrix server side %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 
 	</script>
+	<script src="https://www.gstatic.com/charts/loader.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script>
+		var soejs = {};
+		google.charts.load("current", { packages: ["corechart"] });
+		google.charts.setOnLoadCallback(populateIndicatorCharts);
+
+
+
+		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		//	client side script			
+
+		function populateIndicatorCharts() {
+
+var tables = JSON.parse(document.getElementById("tabledata").textContent);
+
+
+			Vue.component("regioninfo", {
+				props: ["table"],
+				template: "#region-template"
+			});
+
+			var vm = new Vue({
+				el: "#app",
+				data: { tables: tables }, // data: {tables: tables 
+				mounted: function () {
+
+					var myTables = tables.filter(function (t) { return t.hasChart });
+
+					soejs.num_charts = myTables.length;
+					myTables.forEach(function (table, i) {
+
+						var rows = table.rows;
+						if (table.transpose)
+							rows = rows.transpose();
+
+						var data = google.visualization.arrayToDataTable(rows);
+
+						var chartElement = document.getElementById("chart_" + table.index);
+
+						switch (table.type) {
+							case "pie":
+								var chart = new google.visualization.PieChart(chartElement);
+								break;
+							case "line":
+								var chart = new google.visualization.LineChart(chartElement);
+								break;
+							case "column":
+								var chart = new google.visualization.ColumnChart(chartElement);
+								break;
+							case "bar":
+								var chart = new google.visualization.BarChart(chartElement);
+								break;
+							case "area":
+								var chart = new google.visualization.AreaChart(chartElement);
+								break;
+						}//~ end switch chart type
+
+						chart.draw(data, table.options);
+
+
+					}); //~ end charts.foreach
+
+
+
+				}//~ end mounted
+			}); //~ end new Vue
+
+
+		} //~ end charts setonloadcallback
+	</script>
+
 </body>
 
 </html>
