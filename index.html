@@ -89,7 +89,7 @@
 		"use strict";
 
 		var request = new XMLHttpRequest();
-		request.open("GET", "/data/indicator-3-4-0-4.csv", false);  // `false` makes the request synchronous
+		request.open("GET", "/data/indicator-3-4-0-5.csv", false);  // `false` makes the request synchronous
 		request.send(null);
 		var csv = "";
 		if (request.status === 200) {
@@ -109,34 +109,32 @@
 			}
 		);
 		var headRow = results.data.shift().map(function (th) { return th.toString(); });
-		var totalRow = results.data.pop();
+		var lastIndex = headRow.length - 1;
+		var latestYear = headRow[lastIndex];
+		var years = headRow.slice(2);
 
 		console.log("data from papaparse", results);
 
 		var index = 0;
 
 		///////////////////////////////////////////////////
-
-		var tableData = results.data.map(function (record) {
-			return [record[0], record[record.length - 1]];
+		var totals = results.data.filter(function (record) { return record[1] == "Total"; });
+		var tableData = totals.map(function (record) {
+			return [record[0], record[lastIndex]];
 		});
 
-		tableData.sort(function (a, b) {
-			return a[1] < b[1] ? 1 : -1;
-		});
-
-		var head = ["Category", "Emissions (million tonnes)"];
+		var head = ["State", "Emissions"];
 		tableData.unshift(head);
 
-		var options = getDefaultPieChartOptions();
-		options.sliceVisibilityThreshold = 0;
-
+		var options = getDefaultBarChartOptions();
+		options.hAxis.title = "Tonnes of carbon dioxide equivalent (million)";
+		options.legend.position = "none";
 
 		var tables = [{
 			rows: tableData,
-			type: "pie",
+			type: "bar",
 			options: options,
-			heading: "Proportion of Queensland’s agriculture emissions by category, " + headRow[headRow.length - 1],
+			heading: "Comparison of state and territory land use, land use change and forestry (LULUCF) emissions, " + latestYear,
 			hasChart: true,
 			index: index++
 		}];
@@ -144,34 +142,50 @@
 
 		//////////////////////////////////////////////////////////////////////////////////////
 
-		var chart = results.data;
-		chart.unshift(headRow);
-		chart = chart.transpose();
+		var qld = results.data.filter(function (record) {
+			return record[0] == "Queensland";
+		});
+		qld = qld.map(function (record) { return record.slice(1); });
 
-		options = getDefaultLineChartOptions();
-		options.vAxis.title = "Tonnes (millions)";
+		var min = 0;
+		qld.forEach(function (record) {
+			for (var i = 1; i < record.length; ++i)
+				min = Math.min(min, record[i]);
+		});
 
+		qld.unshift(["Year"].concat(years));
+
+		tableData = qld.transpose();
+
+		options = getDefaultAreaChartOptions();
+		options.vAxis.title = "Tonnes of carbon dioxide equivalent (million)";
+		options.vAxis.viewWindow = { min: min };
+		options.seriesType = "area";
+		options.series = { 6: { type: "line" } };
 
 		tables.push({
-			rows: chart,
-			heading: "Trends in Queensland’s agriculture emissions, by category",
+			rows: tableData,
+			heading: "Trends in Queensland’s net land use, land use change and forestry (LULUCF) emissions, by category",
 			hasChart: true,
 			index: index++,
-			type: "line",
+			type: "combo",
 			options: options,
 		});
 
 
 		//////////////////////////////////////////////
-		var data = totalRow.slice(1).map(function (row, i) {
-			return [headRow[i + 1], row];
+		var qldTotalRow = results.data.filter(function (record) {
+			return record[0] == "Queensland" && record[1] == "Total";
+		});
+		var data = qldTotalRow[0].slice(2).map(function (row, i) {
+			return [years[i], row];
 		});
 		data.unshift(["Year", "Emissions (million tonnes)"]);
 
 		tables.push(
 			{
 				rows: data,
-				heading: "Queensland’s total agriculture emissions",
+				heading: "Queensland’s total land use, land use change and forestry (LULUCF) emissions",
 				hasChart: false,
 				index: index++
 			});
@@ -199,7 +213,7 @@
 
 		function populateIndicatorCharts() {
 
-var tables = JSON.parse(document.getElementById("tabledata").textContent);
+			var tables = JSON.parse(document.getElementById("tabledata").textContent);
 
 
 			Vue.component("regioninfo", {
@@ -240,6 +254,9 @@ var tables = JSON.parse(document.getElementById("tabledata").textContent);
 								break;
 							case "area":
 								var chart = new google.visualization.AreaChart(chartElement);
+								break;
+							case "combo":
+								var chart = new google.visualization.ComboChart(chartElement);
 								break;
 						}//~ end switch chart type
 
