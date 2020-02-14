@@ -27,7 +27,7 @@
 </head>
 
 <body>
-	<div id=pre>i'm not here</div>
+	<div id=pre></div>
 
 
 
@@ -40,11 +40,11 @@
 	</script>
 
 	<script id=chartdata type=application/json></script>
-	<script src=js/server-render.js> </script>
+	<script src=/js/server-render.js> </script>
 	<!-- code that goes into matrix server side js block -->
 	<script>
 		var request = new XMLHttpRequest();
-		request.open("GET", "data/indicator-3-4-0-2.csv", false);  // `false` makes the request synchronous
+		request.open("GET", "data/indicator-5-1-0-7.csv", false);  // `false` makes the request synchronous
 		request.send(null);
 		var csv = "";
 		if (request.status === 200) {
@@ -56,90 +56,93 @@
 		//%%%% var csv = '%frontend_asset_metadata_data-file^as_asset:asset_file_contents^replace:\r\n:\\n%';
 
 		var results = Papa.parse(
-			csv,
-			{
-				skipEmptyLines: true,
-				dynamicTyping: true,
-				header: true
-			}
-		);
+	csv,
+	{
+		skipEmptyLines: true,
+		dynamicTyping: true
+	}
+);
 
-		var data = results.data;
-		var latestYear = results.meta.fields[results.meta.fields.length - 1];
-		var keys = results.meta.fields.slice(1);
+var dataHead = results.data.shift();
+var data = results.data;
 
-		///////////////////////////////////////////////////
-		var chartData = results.data.map(function (record) {
-			return [record.Category, record[latestYear]];
-		});
-		chartData.unshift(["Category", "Emissions (million tonnes)"]);
+var totalQueenslandUrbanArea = data[2][13];
 
-		// customise the foot because our data came with it's own foot row and we don't need to calculate it
-		var foot = chartData.pop();
-		var tfoot = String.format("<tfoot><th scope=row>{0}<th class=num>{1}", foot[0], foot[1].toFixed(3));
+///////////////////////////////////////////////////
+var arrayTable = [["", "1999", "current"]];
+arrayTable.push(["Hectares", data[1][13], totalQueenslandUrbanArea]);
 
- 		var index = 0;
-		var region = "queensland";
-		var heading = "Proportion of Queensland’s stationary energy emissions by category, " + latestYear;
-		var htmlTable = tableToHtml(chartData, false, Number.prototype.toFixed, [3]);
-		print(String.format(regionInfoTemplate, region, heading, index++, htmlTable.thead, htmlTable.tbody, tfoot));
+var heading = "Queensland urban area growth between 1999 and current (current data is composed of regional data sourced at different times)";
+var index = 0;
+var region = "queensland";
 
-		var chartItems = [
-			{
-				data: chartData,
-				type: "pie",
-				options: getDefaultPieChartOptions(),
-			}
-		];
+var htmlTable = tableToHtml(arrayTable, false)
+print(String.format(regionInfoTemplate, region, heading, index++, htmlTable.thead, htmlTable.tbody));
+
+arrayTable[0][0] = "Year";
+chart1 = arrayTable.transpose();
+var columnChartOptions = getDefaultColumnChartOptions(1);
+columnChartOptions.vAxis.minValue = 0;
+columnChartOptions.vAxis.format = "short";
+chartData = [{ type: "column", options: columnChartOptions, data: chart1 }];
 
 
-		////////////////////////////////////////////////////////////////////////////////
-		chartData = results.data.map(function (record) {
-			var ret = [record.Category];
-			keys.forEach(function (y) {
-				ret.push(record[y]);
-			});
-			return ret;
-		});
 
-		var head = ["Category"].concat(keys);
-		chartData.unshift(head);
-		// customise the foot because our data came with it's own foot row and we don't need to calculate it
-		foot = chartData.pop();
-		tfoot = "<tfoot><th scope=row>" + foot[0];
-		foot.slice(1).forEach(function (f) {
-			tfoot += "<th class=num>" + f.toFixed(3);
-		})
-		heading = "Trends in Queensland’s stationary energy emissions, by category";
-		 htmlTable = tableToHtml(chartData, false, Number.prototype.toFixed, [3]);
-		print(String.format(regionInfoTemplate, region, heading, index++, htmlTable.thead, htmlTable.tbody, tfoot));
-		
-		chartData = chartData.transpose();
-		var options = getDefaultAreaChartOptions();
-		options.isStacked = true;
-		options.vAxis.title = "Tonnes (millions)";
-		chartItems.push(
-			{
-				heading: heading,
-				data: chartData,
-				type: "area",
-				options: options,
-				foot: foot
-			}
-		);
+/////////////////////////////////////////////////////////////////////////////
+var totalQueenslandArea = data[0][13];
+var queenslandNonUrbanArea = totalQueenslandArea - totalQueenslandUrbanArea;
+
+var arrayTable = [["", "Urban", "Non-Urban"]];
+arrayTable.push(["Hectares", totalQueenslandUrbanArea, queenslandNonUrbanArea]);
+
+var heading = "Queensland urban area as a proportion of total state area";
+
+var htmlTable = tableToHtml(arrayTable, false)
+print(String.format(regionInfoTemplate, region, heading, index++, htmlTable.thead, htmlTable.tbody));
+
+arrayTable[0][0] = "Year";
+var chart2 = arrayTable.transpose();
+
+var pieChartOptions = getDefaultPieChartOptions(2);
+chartData.push({ type: "pie", options: pieChartOptions, data: chart2 });
+
+//////////////////////////////////////////////////////////////////////
+
+print("<h3>Urban area growth between 1999 and current by region (Current data is composed of regional data sourced at different times)</h3>");
+
+var regions = dataHead.slice(1, dataHead.length - 2);
 
 
-		////////////////////////////////////////////////////////////////////////////////
-		var arrayTable = [["Year", "Emissions (million tonnes)"]];
-		var total = results.data[results.data.length-1];
-		keys.forEach(function(y) {
-			arrayTable.push([y, total[y]]);
-		});
+print("<div class=subregions><ul id=regionCheckboxes>");
+regions.forEach(function (r, i) {
+	print(String.format("<li><input type=checkbox value=\"{0}\" id=checkbox_{0} {2} onchange=\"showHideChart(this)\" /><label for=checkbox_{0}>{1}</label>", r.toKebabCase(), r, i == 0 ? "checked" : ""));
+});
+print("</ul>");
 
-		heading = "Queensland’s total stationary energy emissions";
-		htmlTable = tableToHtml(arrayTable, false, Number.prototype.toFixed, [3]);
-		print(String.format(regionInfoTemplate, region, heading, index++, htmlTable.thead, htmlTable.tbody));
-		
+
+regions.forEach(function (region, i) {
+
+	arrayTable = [["", "1999", "current"]];
+	arrayTable.push(["Hectares", data[1][i + 1], data[2][i + 1]]);
+
+	heading = String.format("{0} urban area growth between 1999 and {1}", region, data[3][i + 1]);
+
+	htmlTable = tableToHtml(arrayTable, false)
+	print(String.format(regionInfoTemplate, region.toKebabCase(), heading, index++, htmlTable.thead, htmlTable.tbody));
+
+	arrayTable[0][0] = "Year";
+	arrayTable[0][2] = data[3][i + 1];
+	var myChart = arrayTable.transpose();
+	columnChartOptions = getDefaultColumnChartOptions(1);
+	columnChartOptions.vAxis.minValue = 0;
+	columnChartOptions.vAxis.format = "short";
+	chartData.push({ type: "column", options: columnChartOptions, data: myChart });
+
+
+
+});
+
+print("</div>");
 
 
 
@@ -148,7 +151,7 @@
 
 
 
-		document.getElementById("chartdata").textContent = JSON.stringify(chartItems);
+		document.getElementById("chartdata").textContent = JSON.stringify(chartData);
 //////////////////////////////////////////////////////////////////////////////////////
 
 	</script>
