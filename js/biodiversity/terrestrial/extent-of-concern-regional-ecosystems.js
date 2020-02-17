@@ -93,10 +93,10 @@ for(var i = 0; i < data.length; ++i) {
 
 
 arrayTable = arrayTable.transpose();
-htmlTable = tableToHtml(arrayTable, true);
+htmlTable = tableToHtml(arrayTable, false);
 var heading = "Trends in extent of remnant vegetation, by biodiversity status";
 
-print(String.format(regionInfoTemplate, "queensland", heading, index++, htmlTable.thead, htmlTable.tbody, htmlTable.tfoot));
+print(String.format(regionInfoTemplate, "queensland", heading, index++, htmlTable.thead, htmlTable.tbody));
 
 
 var chartOptions = getDefaultLineChartOptions();
@@ -159,13 +159,13 @@ regionNames.forEach(function (regionName) {
 		arrayTable.push(arrayRow);
 	});
 
-	var htmlTable = tableToHtml(arrayTable, true);
+	arrayTable = arrayTable.transpose();
+	var htmlTable = tableToHtml(arrayTable, false);
 	var heading = String.format("Trends in extent of remnant vegetation by biodiversity status in {0}", regionName);
 
-	print(String.format(regionInfoTemplate, regionName.toKebabCase(), heading, index++, htmlTable.thead, htmlTable.tbody, htmlTable.tfoot));
+	print(String.format(regionInfoTemplate, regionName.toKebabCase(), heading, index++, htmlTable.thead, htmlTable.tbody));
 
 	// chart uses same data layout
-	arrayTable = arrayTable.transpose();
 	var lineChartOptions = getDefaultLineChartOptions();
 	lineChartOptions.vAxis.title = "Hectares";
 	lineChartOptions.vAxis.format = "short";
