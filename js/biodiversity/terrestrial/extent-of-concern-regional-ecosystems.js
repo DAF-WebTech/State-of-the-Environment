@@ -93,7 +93,7 @@ for(var i = 0; i < data.length; ++i) {
 
 
 arrayTable = arrayTable.transpose();
-tableToHtml(arrayTable, true);
+htmlTable = tableToHtml(arrayTable, true);
 var heading = "Trends in extent of remnant vegetation, by biodiversity status";
 
 print(String.format(regionInfoTemplate, "queensland", heading, index++, htmlTable.thead, htmlTable.tbody, htmlTable.tfoot));
