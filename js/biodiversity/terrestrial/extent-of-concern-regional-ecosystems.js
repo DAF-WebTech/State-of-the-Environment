@@ -34,12 +34,7 @@ regionNames.forEach(function (regionName) {
 	for (var i = 0; i < region.length; ++i) {
 		arrayRow.push(region[i][3]);
 	}
-	// the rows are in the wrong order
-	var temp1 = arrayRow.pop();
-	var temp2 = arrayRow.pop();
-	arrayRow.push(temp1);
-	arrayRow.push(temp2);
-	
+
 	arrayTable.push(arrayRow);
 });
 
@@ -63,12 +58,8 @@ regionNames.forEach(function (regionName) {
 	for (var i = 0; i < region.length; ++i) {
 		arrayRow.push(region[i][region[i].length - 1]);
 	}
-	// the rows are in the wrong order
-	var temp1 = arrayRow.pop();
-	var temp2 = arrayRow.pop();
-	arrayRow.push(temp1);
-	arrayRow.push(temp2);
-	
+
+
 	arrayTable.push(arrayRow);
 });
 
@@ -100,11 +91,6 @@ for(var i = 0; i < data.length; ++i) {
 		arrayTable[(i % 3) + 1][j-3] += data[i][j];
 }
 
-var temp1 = arrayTable.pop();
-var temp2 = arrayTable.pop();
-arrayTable.push(temp1);
-arrayTable.push(temp2);
-
 var htmlTable = tableToHtml(arrayTable, true);
 var heading = "Trends in extent of remnant vegetation, by biodiversity status";
 
@@ -131,12 +117,6 @@ regionNames.forEach(function (regionName) {
 		arrayTable.push([r[2], r[3]]);
 	});
 
-	// the labels are in the wrong order
-	var temp1 = arrayTable.pop();
-	var temp2 = arrayTable.pop();
-	arrayTable.push(temp1);
-	arrayTable.push(temp2);
-
 	var htmlTable = tableToHtml(arrayTable, true);
 	var heading = String.format("Proportion of regional ecosystems by biodiversity status in {0}, {1}", regionName, latestYear);
 
@@ -154,12 +134,6 @@ regionNames.forEach(function (regionName) {
 	region.forEach(function (r) {
 		arrayTable.push([r[2], r[r.length - 1]]);
 	});
-
-	// the labels are in the wrong order
-	var temp1 = arrayTable.pop();
-	var temp2 = arrayTable.pop();
-	arrayTable.push(temp1);
-	arrayTable.push(temp2);
 
 	var htmlTable = tableToHtml(arrayTable, true);
 	var heading = String.format("Proportion area of biodiversity status in {0}, {1}", regionName, latestYear);
@@ -182,12 +156,6 @@ regionNames.forEach(function (regionName) {
 			arrayRow.push(r[i]);
 		arrayTable.push(arrayRow);
 	});
-
-	// the labels are in the wrong order
-	var temp1 = arrayTable.pop();
-	var temp2 = arrayTable.pop();
-	arrayTable.push(temp1);
-	arrayTable.push(temp2);
 
 	var htmlTable = tableToHtml(arrayTable, true);
 	var heading = String.format("Trends in extent of remnant vegetation by biodiversity status in {0}", regionName);
