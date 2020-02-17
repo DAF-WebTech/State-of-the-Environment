@@ -64,7 +64,10 @@ if (! String.prototype.contains) {
 
 if (! String.prototype.toKebabCase) {
 	String.prototype.toKebabCase = function () {
-		return this.toLowerCase().replace(/ /g, "-");
+		var returnValue = this.toLowerCase().replace(/ /g, "-");
+		returnValue = returnValue.replace(/\(/g, "");
+		returnValue = returnValue.replace(/\)/g, "");
+		return returnValue;
 	};
 }
 
