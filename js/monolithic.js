@@ -77,6 +77,20 @@ if (!NodeList.prototype.forEach) {
 }
 
 
+Array.prototype.transpose = function () {
+	var ret = [];
+	this.forEach(function (row, i) {
+		row.forEach(function (cell, i2) {
+			if (i == 0)
+				ret.push([cell]);
+			else
+				ret[i2].push(cell);
+		});
+	});
+	return ret;
+}
+
+
 if (typeof Object.assign != 'function') {
   // Must be writable: true, enumerable: false, configurable: true
   Object.defineProperty(Object, "assign", {
