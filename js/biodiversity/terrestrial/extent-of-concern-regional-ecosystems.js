@@ -91,12 +91,14 @@ for(var i = 0; i < data.length; ++i) {
 		arrayTable[(i % 3) + 1][j-3] += data[i][j];
 }
 
-var htmlTable = tableToHtml(arrayTable, true);
+
+arrayTable = arrayTable.transpose();
+tableToHtml(arrayTable, true);
 var heading = "Trends in extent of remnant vegetation, by biodiversity status";
 
 print(String.format(regionInfoTemplate, "queensland", heading, index++, htmlTable.thead, htmlTable.tbody, htmlTable.tfoot));
 
-arrayTable = arrayTable.transpose();
+
 var chartOptions = getDefaultLineChartOptions();
 chartOptions.vAxis.title = "Hectares";
 chartOptions.vAxis.format = "short";
