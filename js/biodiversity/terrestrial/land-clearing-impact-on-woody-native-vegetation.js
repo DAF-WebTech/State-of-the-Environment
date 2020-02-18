@@ -62,10 +62,11 @@ var chart = {
 	type: "column"
 };
 chart.data[0][0] = { label: "Year", type: "string" };
-chart.options = getDefaultColumnChartOptions(table.length);
+chart.options = getDefaultColumnChartOptions();
 chart.options.hAxis.title = "Year range";
-chart.options.vAxis.title = "Hectares per year";
 chart.options.isStacked = true;
+chart.options.vAxis.format = "short";
+chart.options.vAxis.title = "Hectares per year";
 chartData.push(chart);
 
 
@@ -263,6 +264,7 @@ regions.forEach(function (regionName) {
 });
 
 if (typeof window == "undefined")
-	document.getElementById("chartdata").textContent = JSON.stringify(chartData);
-else
 	print("<script id=chartdata type=application/json>" + JSON.stringify(chartData) + "</" + "script>");
+else
+	document.getElementById("chartdata").textContent = JSON.stringify(chartData);
+	
