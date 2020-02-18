@@ -22,10 +22,6 @@ var chartData = [];
 // fix our first row data
 var years = data[0];
 years = years.slice(2);
-years = years.map(function (year) {
-	return year.replace("-", "–"); //&ndash; in years
-});
-
 
 
 // chart 1 total clearing
@@ -108,7 +104,7 @@ clearingTypes.forEach(function (ct) {
 // iterate array for our html table
 tableHtml = tableToHtml(table.transpose());
 
-// TODO matrix replace
+
 regionInfo = String.format(regionInfoTemplate, region, heading, ++index, tableHtml.thead, tableHtml.tbody);
 print(regionInfo);
 
@@ -154,7 +150,7 @@ for (var i = 12; i < data[0].length; ++i) {
 // iterate array for our html table
 tableHtml = tableToHtml(table);
 
-// TODO matrix replace
+
 regionInfo = String.format(regionInfoTemplate, region, heading, ++index, tableHtml.thead, tableHtml.tbody)
 print(regionInfo);
 
