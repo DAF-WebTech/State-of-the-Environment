@@ -1,5 +1,5 @@
 
-if (! csv)
+if (typeof csv == "undefined")
 	var  csv = '%frontend_asset_metadata_data-file^as_asset:asset_file_contents^replace:\r\n:\\n%';
 
 
@@ -262,7 +262,7 @@ regions.forEach(function (regionName) {
 
 });
 
-if (window)
+if (typeof window == "undefined")
 	document.getElementById("chartdata").textContent = JSON.stringify(chartData);
 else
 	print("<script id=chartdata type=application/json>" + JSON.stringify(chartData) + "</" + "script>");
