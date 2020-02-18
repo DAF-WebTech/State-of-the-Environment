@@ -1,5 +1,5 @@
 // this files has helper methods for when you're doing server side js
-// you can use it with <script src="./?a=1469602"></script>
+
 
 /* @license
 Papa Parse
