@@ -1,6 +1,6 @@
 
 if (typeof csv == "undefined")
-	var  csv = '%frontend_asset_metadata_data-file^as_asset:asset_file_contents^replace:\r\n:\\n%';
+	var csv = '%frontend_asset_metadata_data-file^as_asset:asset_file_contents^replace:\r\n:\\n%';
 
 
 var results = Papa.parse(csv, {
@@ -120,8 +120,9 @@ chart = {
 chart.data[0][0] = { label: "Year", type: "string" };
 chart.options = getDefaultColumnChartOptions();
 chart.options.hAxis.title = "Year range";
-chart.options.vAxis.title = "Hectares per year";
 chart.options.isStacked = true;
+chart.options.vAxis.format = "short";
+chart.options.vAxis.title = "Hectares per year";
 chartData.push(chart);
 
 
@@ -166,8 +167,9 @@ chart = {
 chart.data[0][0] = { label: "Year", type: "string" };
 chart.options = getDefaultColumnChartOptions();
 chart.options.hAxis.title = "Year range";
-chart.options.vAxis.title = "Clearing rate (hectares per year)";
 chart.options.isStacked = true;
+chart.options.vAxis.format = "short";
+chart.options.vAxis.title = "Clearing rate (hectares per year)";
 chartData.push(chart);
 
 
@@ -217,8 +219,9 @@ regions.forEach(function (regionName) {
 	chart.data[0][0] = { label: "Year", type: "string" };
 	chart.options = getDefaultColumnChartOptions();
 	chart.options.hAxis.title = "Year range";
-	chart.options.vAxis.title = "Hectares";
 	chart.options.isStacked = true;
+	chart.options.vAxis.format = "short";
+	chart.options.vAxis.title = "Hectares";
 	chartData.push(chart);
 
 
@@ -255,8 +258,9 @@ regions.forEach(function (regionName) {
 	chart.data[0][0] = { label: "Year", type: "string" };
 	chart.options = getDefaultColumnChartOptions();
 	chart.options.hAxis.title = "Year range";
-	chart.options.vAxis.title = "Clearing rate (hectares per year)";
 	chart.options.isStacked = true;
+	chart.options.vAxis.title = "Clearing rate (hectares per year)";
+	chart.options.vAxis.format = "short";
 	chartData.push(chart);
 
 
@@ -267,4 +271,3 @@ if (typeof window == "undefined")
 	print("<script id=chartdata type=application/json>" + JSON.stringify(chartData) + "</" + "script>");
 else
 	document.getElementById("chartdata").textContent = JSON.stringify(chartData);
-	
