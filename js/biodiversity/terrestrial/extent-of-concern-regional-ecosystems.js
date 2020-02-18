@@ -1,5 +1,11 @@
 var csv = "%frontend_asset_metadata_data-file^as_asset:asset_file_contents^replace:\r\n:\\n%";
 
+var chartData = [];
+var gauges = [];
+var result = [];
+var data = {};
+
+
 
 try {
 var result = Papa.parse(csv, { header: true, dynamicTyping: true, skipEmptyLines: true});
@@ -8,10 +14,6 @@ var result = Papa.parse(csv, { header: true, dynamicTyping: true, skipEmptyLines
 }
 
 
-var chartData = [];
-var gauges = [];
-var result = [];
-var data = {};
 
 
 //group records by area 
