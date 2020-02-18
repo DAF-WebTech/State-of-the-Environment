@@ -1,5 +1,11 @@
 var csv = "%frontend_asset_metadata_data-file^as_asset:asset_file_contents^replace:\r\n:\\n%";
+
+
+try {
 var result = Papa.parse(csv, { header: true, dynamicTyping: true, skipEmptyLines: true});
+} catch(e) {
+	print (e.name, e.message, e.toString());
+}
 
 
 var chartData = [];
