@@ -79,7 +79,8 @@ Object.keys(data).forEach(function (k) {
 			theme: "biodiversity",
 			segments: 4,
 			grade: letterGrades[area[0]["Numeric equivalent"]], //assuming there's only one record
-			label: area[0].Grade
+			label: area[0].Grade,
+			rangeLabels = ["Poor", "Good"]
 		};
 		if (gauge.grade == "2" || gauge.grade == "3")
 			gauge.fontSize = 12;
