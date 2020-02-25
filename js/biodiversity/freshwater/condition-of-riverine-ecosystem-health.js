@@ -209,14 +209,14 @@ Object.keys(subCatchments).forEach(function(k, i) {
     print(String.format(
 
 "<div class=\"subregion-info subregion-{0}\">\
-	<h4>{1}</h4>\
+	<h4>Report card grades for {1}</h4>\
 	<div class=gauge-tooltip>\
 		<div id=gauge-{0}></div>\
 		<span class=\"tooltiptext tooltiptext-biodiversity\"><span class=\"tooltipgrade tooltipgrade-biodiversity\"></span><br><br>A: Very Good<br>B: Good<br>C: Poor<br>D: Very Poor</span>\
 	</div>\
 </div>"
 
-, kebab, "Report card grades for " + k));
+, kebab, k));
 
     // charts and tables
     var thead = "<th scope=col>Year";
