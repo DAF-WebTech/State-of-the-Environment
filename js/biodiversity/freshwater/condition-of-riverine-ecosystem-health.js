@@ -5,11 +5,11 @@ var result = [];
 var data = {};
 
 
-var result = Papa.parse("%globals_asset_file_contents:1469689^replace:\r\n:\\n%", { header: true, dynamicTyping: true, skipEmptyLines: true});
+var result = Papa.parse("%globals_asset_file_contents:1469689^replace:\r\n:\\n%", { header: true, dynamicTyping: true, skipEmptyLines: true });
 
 //group records by area 
 
-result.data.forEach(function(record) {
+result.data.forEach(function (record) {
 	var key = record["Water quality report card"];
 	if (!data[key]) {
 		data[key] = [];
@@ -18,7 +18,7 @@ result.data.forEach(function(record) {
 });
 
 
-  
+
 var templateTableOnly = "\
 <div class=\"region-info region-{0}\" {6}>\
 	<h4>{1}</h4>\
@@ -64,89 +64,90 @@ var counter = -1;
 var subCatchments = {};
 var subCatchmentNames = [];
 var checkboxen = "";
-Object.keys(data).forEach(function(k) {
-    
-    var kebab = k.toKebabCase();
-    
-    // first we'll collate the gauges
-    var area = data[k];
-    if (k.indexOf("QCatchment") == 0) {
+Object.keys(data).forEach(function (k) {
 
-        // it's a 1 to 4 scale
-        var gauge = {
-            element: "gauge-" + kebab,
-            theme: "biodiversity",          
-            segments: 4, 
-            grade: String(area[0]["Numeric equivalent"]), //assuming there's only one record
-            label: area[0].Grade
-        };
-        if (gauge.grade == "2" || gauge.grade == "3")
-            gauge.fontSize = 12;
-            
-        gauges.push(gauge)
-    }
-    else if (k.indexOf("Fitzroy") == 0 || k.indexOf("Condamine") == 0) {
-        // these have 5 grades, and we have to get the latest one
-        var gauge = {
-            element: "gauge-" + k.toKebabCase(),
-            theme: "biodiversity",          
-            segments: 5, 
-            grade: String(area[area.length - 1].Grade) //assuming there's only one record
-        };
-            
-        gauges.push(gauge)
-    }
-    
-    var heading = "Report card grades in " + k;
+	var kebab = k.toKebabCase();
 
-    // now do charts/tables
-    if (k.indexOf("Healthy") == 0) {
-        //healthy seq get special treatment, because they have sub-regions
-        area.forEach(function(a) {
-            if (!subCatchments[a["Sub-catchment"]])
-                subCatchments[a["Sub-catchment"]] = [];
-            subCatchments[a["Sub-catchment"]].push(a)
-            //subCatchmentNames.push(area.Year);
-        });
-        checkboxen += String.format("\n<div class=\"region-info region-{0}\"><h4>Select sub-catchments</h4><ul class=subFindingCheckBox>", kebab);
+	// first we'll collate the gauges
+	var area = data[k];
+	if (k.indexOf("QCatchment") == 0) {
 
-        // we'll do these separate and last because we have to list checkboxes for each
+		// it's a 1 to 4 scale
+		var letterGrades = ["", "D", "C", "B", "A"];
+		var gauge = {
+			element: "gauge-" + kebab,
+			theme: "biodiversity",
+			segments: 4,
+			grade: letterGrades[area[0]["Numeric equivalent"]], //assuming there's only one record
+			label: area[0].Grade
+		};
+		if (gauge.grade == "2" || gauge.grade == "3")
+			gauge.fontSize = 12;
 
-    }
-    else if (area.length == 1) {
-        //Those areas with only one record get a plain table, no chart
-        var thead = "<th scope=col>Year<th scope=col>" + area[0].Year;
-        var tbody = "<tr><th scope=row>Grade<td>" + area[0].Grade;
-        var markup = String.format(templateTableOnly, kebab, heading, ++counter, thead, tbody);
-        print(markup);
+		gauges.push(gauge)
+	}
+	else if (k.indexOf("Fitzroy") == 0 || k.indexOf("Condamine") == 0) {
+		// these have 5 grades, and we have to get the latest one
+		var gauge = {
+			element: "gauge-" + k.toKebabCase(),
+			theme: "biodiversity",
+			segments: 5,
+			grade: String(area[area.length - 1].Grade) //assuming there's only one record
+		};
 
-    }
-    else {
-        // charts and tables
-        var thead = "<th scope=col>Year";
-        var tbody = "<tr><th scope=row>Grade";
-        var chart0 = [[{label: "Year", type: "string"}, "Grade", "Numeric equivalent"]];
-        area.forEach(function(a) {
-            thead += "<th scope=col>" + a.Year;
-            tbody += "<td>" + a.Grade;
-            chart0.push([a.Year, a["Numeric equivalent"], a.Grade]);
-        });
-        var markup = String.format(templateChartAndTable, kebab, heading, ++counter, thead, tbody);
-        print (markup);
-        
-        var chartOptions = getDefaultLineChartOptions();
-        chartOptions.legend = { position: "none" };
-    	chartOptions.vAxis.title = "Grade";
-    	chartOptions.vAxis.ticks=[{v:1, f:"E"}, {v:2, f:"D"}, {v:3, f:"C"}, {v:4, f:"B"}, {v:5, f:"A"}];
-    
-        chartData.push({
-            data: chart0, 
-            chartType: "line", 
-            chartOptions: chartOptions,
-            index: counter
-        });
+		gauges.push(gauge)
+	}
 
-    }
+	var heading = "Report card grades in " + k;
+
+	// now do charts/tables
+	if (k.indexOf("Healthy") == 0) {
+		//healthy seq get special treatment, because they have sub-regions
+		area.forEach(function (a) {
+			if (!subCatchments[a["Sub-catchment"]])
+				subCatchments[a["Sub-catchment"]] = [];
+			subCatchments[a["Sub-catchment"]].push(a)
+			//subCatchmentNames.push(area.Year);
+		});
+		checkboxen += String.format("\n<div class=\"region-info region-{0}\"><h4>Select sub-catchments</h4><ul class=subFindingCheckBox>", kebab);
+
+		// we'll do these separate and last because we have to list checkboxes for each
+
+	}
+	else if (area.length == 1) {
+		//Those areas with only one record get a plain table, no chart
+		var thead = "<th scope=col>Year<th scope=col>" + area[0].Year;
+		var tbody = "<tr><th scope=row>Grade<td>" + area[0].Grade;
+		var markup = String.format(templateTableOnly, kebab, heading, ++counter, thead, tbody);
+		print(markup);
+
+	}
+	else {
+		// charts and tables
+		var thead = "<th scope=col>Year";
+		var tbody = "<tr><th scope=row>Grade";
+		var chart0 = [[{ label: "Year", type: "string" }, "Grade", "Numeric equivalent"]];
+		area.forEach(function (a) {
+			thead += "<th scope=col>" + a.Year;
+			tbody += "<td>" + a.Grade;
+			chart0.push([a.Year, a["Numeric equivalent"], a.Grade]);
+		});
+		var markup = String.format(templateChartAndTable, kebab, heading, ++counter, thead, tbody);
+		print(markup);
+
+		var chartOptions = getDefaultLineChartOptions();
+		chartOptions.legend = { position: "none" };
+		chartOptions.vAxis.title = "Grade";
+		chartOptions.vAxis.ticks = [{ v: 1, f: "E" }, { v: 2, f: "D" }, { v: 3, f: "C" }, { v: 4, f: "B" }, { v: 5, f: "A" }];
+
+		chartData.push({
+			data: chart0,
+			chartType: "line",
+			chartOptions: chartOptions,
+			index: counter
+		});
+
+	}
 
 });
 
@@ -156,8 +157,8 @@ Object.keys(data).forEach(function(k) {
 
 
 
-Object.keys(subCatchments).forEach(function(s, i) {
-    checkboxen += String.format("\n<li><input type=checkbox value={0} data-sub={0} id={0}_checkbox onchange=\"showhidechart(this)\" {2}><label for={0}_checkbox>{1}</label>", s.toKebabCase(), s, i==0 ? "checked" : "");
+Object.keys(subCatchments).forEach(function (s, i) {
+	checkboxen += String.format("\n<li><input type=checkbox value={0} data-sub={0} id={0}_checkbox onchange=\"showhidechart(this)\" {2}><label for={0}_checkbox>{1}</label>", s.toKebabCase(), s, i == 0 ? "checked" : "");
 });
 checkboxen += ("</ul>");
 print(checkboxen);
@@ -166,8 +167,8 @@ print(checkboxen);
 
 var grades = ["not used", "D-", "D", "D+", "C-", "C", "C+", "B-", "B", "B+", "A-", "A", "A+"];
 var ticks = [];
-for(var i = 2; i < grades.length; i += 3) {
-   ticks.push({v: i, f: grades[i] }); 
+for (var i = 2; i < grades.length; i += 3) {
+	ticks.push({ v: i, f: grades[i] });
 }
 
 
@@ -202,13 +203,13 @@ var templateSubCatchment = "\
 
 var regionKebab = "region-healthy-land-and-water-south-east-queensland-report-card";
 
-Object.keys(subCatchments).forEach(function(k, i) {
+Object.keys(subCatchments).forEach(function (k, i) {
 
-    var subCatchment = subCatchments[k];
-    var kebab = k.toKebabCase();
-    print(String.format(
+	var subCatchment = subCatchments[k];
+	var kebab = k.toKebabCase();
+	print(String.format(
 
-"<div class=\"subregion-info subregion-{0}\">\
+		"<div class=\"subregion-info subregion-{0}\">\
 	<h4>Report card grades for {1}</h4>\
 	<div class=gauge-tooltip>\
 		<div id=gauge-{0}></div>\
@@ -216,53 +217,53 @@ Object.keys(subCatchments).forEach(function(k, i) {
 	</div>\
 </div>"
 
-, kebab, k));
+		, kebab, k));
 
-    // charts and tables
-    var thead = "<th scope=col>Year";
-    var tbody = "<tr><th scope=row>Grade";
-    var chart0 = [[{label: "Year", type: "string"}, "Grade", "Numeric equivalent"]];
-    subCatchment.forEach(function(s, i) {
-        thead += "<th scope=col>" + s.Year;
-        tbody += "<td>" + s.Grade;
-        chart0.push([s.Year, grades.indexOf(s.Grade), s.Grade]);
-        if (i == subCatchment.length - 1) {
-            // last one, use this for a gauge
-            var gauge = {
-                element: "gauge-" + kebab,
-                theme: "biodiversity",          
-                segments: 4, 
-                grade: s.Grade,
-                label: s.Grade
-            };
-            gauges.push(gauge)
-        }
-    });
-    
-    var heading = "";//"Report card grades for " + k;
-    var markup = String.format(templateSubCatchment, kebab, heading, ++counter, thead, tbody);
-    print (markup);
-    
-    var chartOptions = getDefaultLineChartOptions();
-    chartOptions.legend = { position: "none" };
+	// charts and tables
+	var thead = "<th scope=col>Year";
+	var tbody = "<tr><th scope=row>Grade";
+	var chart0 = [[{ label: "Year", type: "string" }, "Grade", "Numeric equivalent"]];
+	subCatchment.forEach(function (s, i) {
+		thead += "<th scope=col>" + s.Year;
+		tbody += "<td>" + s.Grade;
+		chart0.push([s.Year, grades.indexOf(s.Grade), s.Grade]);
+		if (i == subCatchment.length - 1) {
+			// last one, use this for a gauge
+			var gauge = {
+				element: "gauge-" + kebab,
+				theme: "biodiversity",
+				segments: 4,
+				grade: s.Grade,
+				label: s.Grade
+			};
+			gauges.push(gauge)
+		}
+	});
+
+	var heading = "";//"Report card grades for " + k;
+	var markup = String.format(templateSubCatchment, kebab, heading, ++counter, thead, tbody);
+	print(markup);
+
+	var chartOptions = getDefaultLineChartOptions();
+	chartOptions.legend = { position: "none" };
 	chartOptions.vAxis.title = "Grade";
 	chartOptions.vAxis.ticks = ticks;
 	chartOptions.vAxis.viewWindow = { min: 0, max: grades.length };
 
-    chartData.push({
-        data: chart0, 
-        chartType: "line", 
-        chartOptions: chartOptions,
-        index: counter,
-        kebab: kebab,
-        initialShow: i == 0
-    });    
+	chartData.push({
+		data: chart0,
+		chartType: "line",
+		chartOptions: chartOptions,
+		index: counter,
+		kebab: kebab,
+		initialShow: i == 0
+	});
 
-});    
+});
 
 print("</div>");
 
 // write the chart data to the page
-print("\n<script id=jsonchartdata type=application/json>" + JSON.stringify(chartData) + "</" + "script>"); 
-print("\n<script id=jsongaugedata type=application/json>" + JSON.stringify(gauges) + "</" + "script>"); 
+print("\n<script id=jsonchartdata type=application/json>" + JSON.stringify(chartData) + "</" + "script>");
+print("\n<script id=jsongaugedata type=application/json>" + JSON.stringify(gauges) + "</" + "script>");
 
