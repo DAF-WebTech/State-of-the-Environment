@@ -242,7 +242,7 @@ Object.keys(subCatchments).forEach(function (k, i) {
 	});
 
 	var heading = "";//"Report card grades for " + k;
-	var markup = String.format(templateSubCatchment, kebab, heading, ++counter, thead, tbody, "", i > 0 ? "" :"initial-hide");
+	var markup = String.format(templateSubCatchment, kebab, heading, ++counter, thead, tbody, "", i == 0 ? "" :"initial-hide");
 	print(markup);
 
 	var chartOptions = getDefaultLineChartOptions();
