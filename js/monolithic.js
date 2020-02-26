@@ -599,7 +599,7 @@ var soejs = {
 				soejs.polygonArray[i].set("fillColor", soejs.highlight_colour);
 			}
 			// special handling for GBR area for Water Quality Cathcments. should also highlight smaller polygon under GBR for water quality catchments
-			if (soejs.polyFilter == 'qld-water-quality-catchments-poly-v3.js' && region_code == 'region-great-barrier-reef-report-card' && (GBR.indexOf(soejs.polygonArray[i].id) != -1)) {
+			if (soejs.polyFilter == 'qld-water-quality-catchments-poly-v4.js' && region_code == 'region-great-barrier-reef-report-card' && (GBR.indexOf(soejs.polygonArray[i].id) != -1)) {
 				soejs.polygonArray[i].set("fillColor", soejs.highlight_colour);
 			}
 
