@@ -210,7 +210,7 @@ Object.keys(subCatchments).forEach(function (k, i) {
 	var kebab = k.toKebabCase();
 	print(String.format(
 
-		"<div class=\"subregion-info subregion-{0}\">\
+		"<div class=\"subregion-info subregion-{0} {2}\">\
 	<h4>Report card grades for {1}</h4>\
 	<div class=gauge-tooltip>\
 		<div id=gauge-{0}></div>\
@@ -218,7 +218,7 @@ Object.keys(subCatchments).forEach(function (k, i) {
 	</div>\
 </div>"
 
-		, kebab, k));
+		, kebab, k, i == 0 ? "" : "initial-hide"));
 
 	// charts and tables
 	var thead = "<th scope=col>Year";
