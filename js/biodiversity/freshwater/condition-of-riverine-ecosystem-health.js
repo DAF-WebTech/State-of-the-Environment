@@ -177,7 +177,7 @@ for (var i = 2; i < grades.length; i += 3) {
 
 
 var templateSubCatchment = "\
-<div class=\"subregion-info subregion-{0}\">\
+<div class=\"subregion-info subregion-{0} {6}\">\
 	<h4>{1}</h4>\
 	<ul class=chart-tabs data-index={2}>\
 	    <li class=active><span>Chart</span>\
@@ -242,7 +242,7 @@ Object.keys(subCatchments).forEach(function (k, i) {
 	});
 
 	var heading = "";//"Report card grades for " + k;
-	var markup = String.format(templateSubCatchment, kebab, heading, ++counter, thead, tbody);
+	var markup = String.format(templateSubCatchment, kebab, heading, ++counter, thead, tbody, "", i > 0 ? "" :"initial-hide");
 	print(markup);
 
 	var chartOptions = getDefaultLineChartOptions();
@@ -257,7 +257,6 @@ Object.keys(subCatchments).forEach(function (k, i) {
 		chartOptions: chartOptions,
 		index: counter,
 		kebab: kebab,
-		initialShow: i == 0
 	});
 
 });
