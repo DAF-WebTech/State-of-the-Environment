@@ -930,6 +930,8 @@ var soejs = {
 					break;
 				case "A":
 				case "4":
+				case "Very Good":
+				case "Very High":
 					needleStartValue = 87.5;
 					break;
 				case "A-":
@@ -940,6 +942,8 @@ var soejs = {
 					break;
 				case "B":
 				case "3":
+				case "Good":
+				case "High":
 					needleStartValue = 62.5;
 					break;
 				case "B-":
@@ -950,6 +954,8 @@ var soejs = {
 					break;
 				case "C":
 				case "2":
+				case "Poor":
+				case "Low":
 					needleStartValue = 37.5;
 					break;
 				case "C-":
@@ -960,6 +966,8 @@ var soejs = {
 					break;
 				case "D":
 				case "1":
+				case "Very Poor":
+				case "Very Low":
 					needleStartValue = 12.5;
 					break;
 				case "D-":
