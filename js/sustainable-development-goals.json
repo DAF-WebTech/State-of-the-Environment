@@ -3,7 +3,7 @@
     "Name": "GOAL 1: NO POVERTY",
     "Description": "End poverty in all its forms everywhere.",
     "ImageId": "1460006",
-    "Id": "goal-1",
+    "Id": "sdg-01",
     "Targets": [
       {
         "TargetNumber": "1.5",
@@ -18,7 +18,7 @@
     "Name": "GOAL 2: ZERO HUNGER",
     "Description": "End hunger, achieve food security and improved nutrition and promote sustainable agriculture.",
     "ImageId": "1460007",
-    "Id": "goal-2",
+    "Id": "sdg-02",
     "Targets": [
       {
         "TargetNumber": "2.4",
@@ -33,7 +33,7 @@
     "Name": "GOAL 3: GOOD HEALTH AND WELL-BEING",
     "Description": "Ensure healthy lives and promote well-being for all at all ages.",
     "ImageId": "1460008", 
-    "Id": "goal-3",
+    "Id": "sdg-03",
     "Targets": [
       {
         "TargetNumber": "3.9",
@@ -48,7 +48,7 @@
     "Name": "GOAL 4: QUALITY EDUCATION",
     "Description": "Ensure inclusive and equitable quality education and promote lifelong learning opportunities for all.",
     "ImageId": "1460009",
-    "Id": "goal-4",
+    "Id": "sdg-04",
     "Targets": []
   },
 
@@ -56,7 +56,7 @@
     "Name": "GOAL 5: GENDER EQUALITY",
     "Description": "Achieve gender equality and empower all women and girls.",
     "ImageId": "1460010",
-    "Id": "goal-5",
+    "Id": "sdg-05",
     "Targets": []
   },
 
@@ -64,7 +64,7 @@
     "Name": "GOAL 6: CLEAN WATER AND SANITATION",
     "Description": "Ensure availability and sustainable management of water and sanitation for all.",
     "ImageId": "1460011",
-    "Id": "goal-6",
+    "Id": "sdg-06",
     "Targets": [
       {
         "TargetNumber": "6.3",
@@ -98,7 +98,7 @@
     "Name": "GOAL 7: AFFORDABLE AND CLEAN ENERGY",
     "Description": "Ensure access to affordable, reliable, sustainable and modern energy for all.",
     "ImageId": "1460012",
-    "Id": "goal-7",
+    "Id": "sdg-07",
     "Targets": [
       {
         "TargetNumber": "7.2",
@@ -125,7 +125,7 @@
     "Name": "GOAL 8: DECENT WORK AND ECONOMIC GROWTH",
     "Description": "Promote sustained, inclusive and sustainable economic growth, full and productive     employment and decent work for all.",
     "ImageId": "1460013",
-    "Id": "goal-8",
+    "Id": "sdg-08",
     "Targets": [
       {
         "TargetNumber": "8.3",
@@ -151,7 +151,7 @@
     "Name": "GOAL 9: INDUSTRY, INOVATION AND INFRASTRUCTURE",
     "Description": "Build resilient infrastructure, promote inclusive and sustainable industrialization and foster innovation.",
     "ImageId": "1460014",
-    "Id": "goal-9",
+    "Id": "sdg-09",
     "Targets": [
       {
         "TargetNumber": "9.1",
@@ -171,14 +171,14 @@
     "Name": "GOAL 10: REDUCED INEQUALITIES",
     "Description": "Reduce inequality within and among countries.",
     "ImageId": "1460015",
-    "Id": "goal-10",
+    "Id": "sdg-10",
     "Targets": []
   },
   {
     "Name": "GOAL 11: SUSTAINABLE CITIES AND COMMUNITIES ",
     "Description": "Make cities and human settlements inclusive, safe, resilient and sustainable.",
     "ImageId": "1460016",
-    "Id": "goal-11",
+    "Id": "sdg-11",
     "Targets": [
       {
         "TargetNumber": "11.2",
@@ -216,7 +216,7 @@
     "Name": "GOAL 12: RESPONSIBLE CONSUMPTION AND PRODUCTION",
     "Description": "Ensure sustainable consumption and production patterns.",
     "ImageId": "1460017",
-    "Id": "goal-12",
+    "Id": "sdg-12",
     "Targets": [
       {
         "TargetNumber": "12.2",
@@ -242,7 +242,7 @@
     "Name": "GOAL 13: CLIMATE ACTION",
     "Description": "Take urgent action to combat climate change and its impacts.",
     "ImageId": "1460018",
-    "Id": "goal-13",
+    "Id": "sdg-13",
     "Targets": [
       {
         "TargetNumber": "13.1",
@@ -268,7 +268,7 @@
     "Name": "GOAL 14: LIFE BELOW WATER",
     "Description": "Conserve and sustainably use the oceans, seas and marine resources for sustainable development.",
     "ImageId": "1460019",
-    "Id": "goal-14",
+    "Id": "sdg-14",
     "Targets": [
       {
         "TargetNumber": "14.1",
@@ -300,7 +300,7 @@
     "Name": "GOAL 15: LIFE ON LAND",
     "Description": "Protect, restore and promote sustainable use of terrestrial ecosystems, sustainably manage forests, combat desertification, and halt and reverse land degradation and halt biodiversity loss.",
     "ImageId": "1460020",
-    "Id": "goal-15",
+    "Id": "sdg-15",
     "Targets": [
       {
         "TargetNumber": "15.1",
@@ -356,7 +356,7 @@
     "Name": "GOAL 16: PEACE, JUSTICE AND STRONG INSTITUTIONS",
     "Description": "Promote peaceful and inclusive societies for sustainable development, provide access to justice for all and build effective, accountable and inclusive institutions at all levels.",
     "ImageId": "1460021",
-    "Id": "goal-16",
+    "Id": "sdg-16",
     "Targets": [
       {
         "TargetNumber": "16.6",
@@ -370,7 +370,7 @@
     "Name": "GOAL 17: PARTNERSHIPS FOR THE GOALS",
     "Description": "Strengthen the means of implementation and revitalize the global partnership for sustainable development.",
     "ImageId": "1460022",
-    "Id": "goal-17",
+    "Id": "sdg-17",
     "Targets": [
       {
         "TargetNumber": "17.14",
