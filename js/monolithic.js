@@ -590,8 +590,7 @@ var soejs = {
 		}
 
 		// Highlight selected region
-		var GBR = ["region-fitzroy-basin-report-card", "region-fitzroy-report-card", "region-mackay-whitsunday-report-card", "region-gladstone-harbour-report-card", "region-qcatchment-endeavour", "region-qcatchment-jacky-jacky", "region-qcatchment-jeannie", "region-qcatchment-lockhart", "region-qcatchment-normanby", "region-qcatchment-olive-pascoe", "region-qcatchment-stewart", "region-wet-tropics-report-card",
-	"region-qcatchment-burdekin"];
+		var GBR = ["region-fitzroy-basin-report-card", "region-fitzroy-report-card", "region-mackay-whitsunday-report-card", "region-gladstone-harbour-report-card", "region-qcatchment-endeavour", "region-qcatchment-jacky-jacky", "region-qcatchment-jeannie", "region-qcatchment-lockhart", "region-qcatchment-normanby", "region-qcatchment-olive-pascoe", "region-qcatchment-stewart", "region-wet-tropics-report-card", "region-qcatchment-burdekin", "region-townsville-dry-tropics"];
 
 		for (var i = 0; i < soejs.polygonArray.length; i++) {
 			soejs.polygonArray[i].set("fillColor", soejs.polygonArray[i].regioncolor); //set to default color of the filter
