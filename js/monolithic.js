@@ -480,7 +480,7 @@ var soejs = {
 			}
 			else {
 				soejs.map.controls[google.maps.ControlPosition.TOP_CENTER].pop(soejs.colourControl);
-				soe.js.fillOpacity = 0.75;
+				soejs.fillOpacity = 0.75;
 				soejs.showRegionColourFlag = false;
 			}
 			soejs.polygonArray.forEach(function (p) {
@@ -895,139 +895,9 @@ var soejs = {
 		});
 
 		document.querySelector(String.format(".regionlinks a[href='#{0}']", selected_region)).classList.add("current");
-	},
-
-
-	// options = {
-	//  segments: Number # required, either 4 or 5; anything else has undefined effects
-	//  theme: String # required, one of "biodiversity", "heritage", "pollution", "climate", "liveability"; anything else has undefined effects
-	//  grade: String # default is "D-" if segements==4, or "E" if segments==5
-	//  element: String # default is "gauge"; id of the element in which to draw the gauge (do not include #)
-	//  label: deprecated, will be ignored [String # default is options.grade; the label in the centre of the gauge]
-	//  fontSize: Numnber # default is 20; size of the font for grade and the range labels
-	//  rangeLabels: Array of two strings; labels at the end of the ranges of the gauge, default is ["Very Poor", "Very Good"]
-	// }
-	createGauge: function (options) {
-
-		/**/
-
-		var arcDelimiters = []
-		var arcColours = [];
-		var needleStartValue = 0;
-		if (options.segments == 4) {
-			arcDelimiters = [25, 50, 75];
-			switch (options.theme) {
-				case "biodiversity":
-					arcColours = ["rgb(233,245,227)", "rgb(171,198,157)", "rgb(110,152,86)", "rgb(48,105,16)"];
-					break;
-				case "heritage":
-					arcColours = ["rgb(253,221,208)", "rgb(232,147,140)", "rgb(210,74,72)", "rgb(189,0,4)"]
-			}
-			switch (options.grade) {
-				case "A+":
-					needleStartValue = 93.75;
-					break;
-				case "A":
-				case "4":
-				case "Very Good":
-				case "Very High":
-					needleStartValue = 87.5;
-					break;
-				case "A-":
-					needleStartValue = 79.2;
-					break;
-				case "B+":
-					needleStartValue = 70.9;
-					break;
-				case "B":
-				case "3":
-				case "Good":
-				case "High":
-					needleStartValue = 62.5;
-					break;
-				case "B-":
-					needleStartValue = 54.2;
-					break;
-				case "C+":
-					needleStartValue = 45.9;
-					break;
-				case "C":
-				case "2":
-				case "Poor":
-				case "Low":
-					needleStartValue = 37.5;
-					break;
-				case "C-":
-					needleStartValue = 29.2;
-					break;
-				case "D+":
-					needleStartValue = 20.9;
-					break;
-				case "D":
-				case "1":
-				case "Very Poor":
-				case "Very Low":
-					needleStartValue = 12.5;
-					break;
-				case "D-":
-				default:
-					needleStartValue = 6.25;
-					break;
-			}
-		}
-		else if (options.segments == 5) {
-			arcDelimiters = [20, 40, 60, 80];
-			switch (options.theme) {
-				case "biodiversity":
-					arcColours = ["rgb(233,245,227)", "rgb(187,210,174)", "rgb(141,175,122)", "rgb(94,140,69)", "rgb(48,105,16)"];
-					break;
-				case "heritage":
-					arcColours = ["rgb(253,221,208)", "rgb(237,166,157)", "rgb(221,111,106)", "rgb(205,55,55)", "rgb(189,0,4)"];
-			}
-			switch (options.grade) {
-				case "A":
-				case "5":
-					needleStartValue = 90;
-					break;
-				case "B":
-				case "4":
-					needleStartValue = 70;
-					break;
-				case "C":
-				case "3":
-					needleStartValue = 50;
-					break;
-				case "D":
-				case "2":
-					needleStartValue = 30;
-					break;
-				case "E":
-				case "1":
-				default:
-					needleStartValue = 10;
-					break;
-			}
-		}
-
-
-		var elementId = options.element || "gauge";
-		var elem = document.getElementById(elementId);
-		var width = 400;
-		var options = {
-			hasNeedle: true,
-			needleColor: "black",
-			arcColors: arcColours,
-			arcDelimiters: arcDelimiters,
-			rangeLabel: options.rangeLabels || ["Very Poor", "Very Good"],
-			centralLabel: " " /*options.label || options.grade */,
-			rangeLabelFontSize: options.fontSize || 20,
-			needleStartValue: needleStartValue,
-			arcPadding: 6,
-			arcPaddingColor: "white",
-			arcOverEffect: false
-		};
-		GaugeChart.gaugeChart(elem, width, options);
 	}
+
+
 
 };
 
