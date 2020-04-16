@@ -496,6 +496,10 @@ var soejs = {
 			document.querySelectorAll("ul.regionlink-tabs li").forEach(function(li) {
 				li.classList.toggle("active");
 			});
+			document.getElementById("regionmap").classList.add("inactive");
+			document.getElementById("regionmap").classList.remove("active");
+			document.getElementById("regionlinks").classList.remove("inactive");
+			document.getElementById("regionlinks").classList.add("active");
 		}
 	},//~ initialise
 
