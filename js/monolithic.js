@@ -339,7 +339,13 @@ var soejs = {
 		return formattedData;
 	},
 
-
+	mapLoadError: function() {
+		document.querySelectorAll("ul.regionlink-tabs li").forEach(function(li) {
+			li.classList.toggle("active");
+		});
+		document.getElementById("regionmap").classList.add("inactive");
+		document.getElementById("regionlinks").classList.remove("inactive");
+	},
 
 	initialisePoly: function () {
 
@@ -352,155 +358,150 @@ var soejs = {
 		if (!soejs.thisFindingHasRegionTabs)
 			return; // not all finding pages have region maps
 
-		//we found that occasionally, unreliably, and we couldn't reproduce it
+		// we found that occasionally, unreliably, and we couldn't reproduce it
 		// loading the charts library somehow knocked out google maps
 		// so we'll bypass all this code if it's not loaded
-		if (google.maps) { 	
+		if (!google.maps) { 	
+			soejs.mapLoadError();
+			return;
+		}
 
-			var default_center = new google.maps.LatLng(-19.5, 145.75);
-			var bounds = new google.maps.LatLngBounds();
-			var location_code = document.getElementById("location_code").value; //encoded polygon
-			var location_name = document.getElementById("location_name").value; //region name
-			var latitude = document.getElementById("latitude").value;
-			var longitude = document.getElementById("longitude").value;
+		var default_center = new google.maps.LatLng(-19.5, 145.75);
+		var bounds = new google.maps.LatLngBounds();
+		var location_code = document.getElementById("location_code").value; //encoded polygon
+		var location_name = document.getElementById("location_name").value; //region name
+		var latitude = document.getElementById("latitude").value;
+		var longitude = document.getElementById("longitude").value;
 
-			// define zoom for the spatial filter
-			var mapOptions = {
-				zoom: 6,
-				center: default_center,
-				draggable: true,
-				mapTypeControl: true,
-				mapTypeControlOptions: {
-					style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
-				},
-				streetViewControl: false,
-				zoomControl: true,
-				scrollwheel: false
-			};
-			soejs.map = new google.maps.Map(mapCanvas, mapOptions);
+		// define zoom for the spatial filter
+		var mapOptions = {
+			zoom: 6,
+			center: default_center,
+			draggable: true,
+			mapTypeControl: true,
+			mapTypeControlOptions: {
+				style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+			},
+			streetViewControl: false,
+			zoomControl: true,
+			scrollwheel: false
+		};
+		soejs.map = new google.maps.Map(mapCanvas, mapOptions);
 
-			for (var i = 0; i < polyArray.length; i++) {
-				// where encoding includes more than one polygon, QGIS separates them with a <br> tag so we need to split on it to ensure the <br> is not considered when decoding
+		for (var i = 0; i < polyArray.length; i++) {
+			// where encoding includes more than one polygon, QGIS separates them with a <br> tag so we need to split on it to ensure the <br> is not considered when decoding
 
-				var multiPoly = String(polyArray[i][location_code]).split("<br>"); //the array position of encoding may change depending on the layer's order of attributes
-				var region_name = polyArray[i][location_name]; // this will change depending on the dataset
-				var region_code = 'region-' + soejs.codify(String(region_name));
-				var info_content = region_name;
-				var region_lat = polyArray[i][latitude];
-				var region_long = polyArray[i][longitude];
-
-
-				for (var j = 0; j < multiPoly.length; j++) {
-					var decodedPath = google.maps.geometry.encoding.decodePath(String(multiPoly[j]));
-
-					var setRegion = new google.maps.Polygon({
-						path: decodedPath,
-						clickable: true,
-						strokeColor: "#CDCDCD",
-						fillColor: soejs.fillColour,
-						fillOpacity: soejs.fillOpacity,
-						strokeOpacity: 0.5,
-						strokeWeight: 1.0,
-						map: soejs.map,
-						regionname: region_name,
-						label: region_name,
-						regionlat: region_lat,
-						regionlong: region_long,
-						regioncolor: soejs.regionColour,
-						id: region_code
-					});
-
-					// If no info to show set cursor to default
-					if (!soejs.clickable) {
-						setRegion.set("cursor", "default");
-					}
-
-					// Add to global array of polygon elements
-					soejs.polygonArray.push(setRegion);
-
-					// Watch for hovering over region
-					google.maps.event.addListener(setRegion, "mouseover", function (event) {
-						soejs.showSelectedRegion(this.id, this.regionname);
-					});
-
-					// Watch for hovering out of region
-					google.maps.event.addListener(setRegion, "mouseout", function (event) {
-						if (soejs.last_id_selected) {
-							soejs.selectPolyRegion(soejs.last_id_selected);
-						}
-					});
+			var multiPoly = String(polyArray[i][location_code]).split("<br>"); //the array position of encoding may change depending on the layer's order of attributes
+			var region_name = polyArray[i][location_name]; // this will change depending on the dataset
+			var region_code = 'region-' + soejs.codify(String(region_name));
+			var info_content = region_name;
+			var region_lat = polyArray[i][latitude];
+			var region_long = polyArray[i][longitude];
 
 
-					// Watch for clicking on region
-					google.maps.event.addListener(setRegion, 'click', function (event) {
-						if (document.querySelectorAll("." + this.id).length || location.href.indexOf("/about/search") >= 0) {
-							soejs.showSelectedRegion(this.id, this.regionname);
-							soejs.showHideRegionInfo(this.id);
-							soejs.last_id_selected = this.id;
-						}
-					});
+			for (var j = 0; j < multiPoly.length; j++) {
+				var decodedPath = google.maps.geometry.encoding.decodePath(String(multiPoly[j]));
 
-					// Expand the map viewport extent to include all polygons
-					// compatible with IE8
-					for (var k = 0; k < decodedPath.length; k++) {
-						soejs.path += decodedPath[k];
-						bounds.extend(decodedPath[k]);
-					}
-				}
-			}
-			soejs.map.fitBounds(bounds);
-			var listener = google.maps.event.addListener(soejs.map, "idle", function () {
-				soejs.map.fitBounds(bounds);
-				if (soejs.map.getZoom() > 10) {
-					soejs.map.setZoom(10);
-				}
-				google.maps.event.removeListener(listener);
-			});
-
-
-			// bounds of the desired area
-			var allowedBounds = new google.maps.LatLngBounds(
-				new google.maps.LatLng(-31, 137),
-				new google.maps.LatLng(-10, 155)
-			);
-			var lastValidCenter = soejs.map.getCenter();
-
-			google.maps.event.addListener(soejs.map, 'center_changed', function () {
-				if (allowedBounds.contains(soejs.map.getCenter())) {
-					// still within valid bounds, so save the last valid position
-					lastValidCenter = soejs.map.getCenter();
-					return;
-				}
-				// not valid anymore => return to last valid position
-				soejs.map.panTo(lastValidCenter);
-			});
-
-			google.maps.event.addListener(soejs.map, "maptypeid_changed", function () {
-				if (soejs.map.mapTypeId == "satellite" || soejs.map.mapTypeId == "hybrid") {
-					if (!soejs.showRegionColourFlag) {
-						soejs.map.controls[google.maps.ControlPosition.TOP_CENTER].push(soejs.colourControl);
-						soejs.showRegionColourFlag = true;
-					}
-				}
-				else {
-					soejs.map.controls[google.maps.ControlPosition.TOP_CENTER].pop(soejs.colourControl);
-					soejs.fillOpacity = 0.75;
-					soejs.showRegionColourFlag = false;
-				}
-				soejs.polygonArray.forEach(function (p) {
-					p.set("fillOpacity", soejs.fillOpacity);
+				var setRegion = new google.maps.Polygon({
+					path: decodedPath,
+					clickable: true,
+					strokeColor: "#CDCDCD",
+					fillColor: soejs.fillColour,
+					fillOpacity: soejs.fillOpacity,
+					strokeOpacity: 0.5,
+					strokeWeight: 1.0,
+					map: soejs.map,
+					regionname: region_name,
+					label: region_name,
+					regionlat: region_lat,
+					regionlong: region_long,
+					regioncolor: soejs.regionColour,
+					id: region_code
 				});
 
-			});
-		} else {
-			document.querySelectorAll("ul.regionlink-tabs li").forEach(function(li) {
-				li.classList.toggle("active");
-			});
-			document.getElementById("regionmap").classList.add("inactive");
-			document.getElementById("regionmap").classList.remove("active");
-			document.getElementById("regionlinks").classList.remove("inactive");
-			document.getElementById("regionlinks").classList.add("active");
+				// If no info to show set cursor to default
+				if (!soejs.clickable) {
+					setRegion.set("cursor", "default");
+				}
+
+				// Add to global array of polygon elements
+				soejs.polygonArray.push(setRegion);
+
+				// Watch for hovering over region
+				google.maps.event.addListener(setRegion, "mouseover", function (event) {
+					soejs.showSelectedRegion(this.id, this.regionname);
+				});
+
+				// Watch for hovering out of region
+				google.maps.event.addListener(setRegion, "mouseout", function (event) {
+					if (soejs.last_id_selected) {
+						soejs.selectPolyRegion(soejs.last_id_selected);
+					}
+				});
+
+
+				// Watch for clicking on region
+				google.maps.event.addListener(setRegion, 'click', function (event) {
+					if (document.querySelectorAll("." + this.id).length || location.href.indexOf("/about/search") >= 0) {
+						soejs.showSelectedRegion(this.id, this.regionname);
+						soejs.showHideRegionInfo(this.id);
+						soejs.last_id_selected = this.id;
+					}
+				});
+
+				// Expand the map viewport extent to include all polygons
+				// compatible with IE8
+				for (var k = 0; k < decodedPath.length; k++) {
+					soejs.path += decodedPath[k];
+					bounds.extend(decodedPath[k]);
+				}
+			}
 		}
+		soejs.map.fitBounds(bounds);
+		var listener = google.maps.event.addListener(soejs.map, "idle", function () {
+			soejs.map.fitBounds(bounds);
+			if (soejs.map.getZoom() > 10) {
+				soejs.map.setZoom(10);
+			}
+			google.maps.event.removeListener(listener);
+		});
+
+
+		// bounds of the desired area
+		var allowedBounds = new google.maps.LatLngBounds(
+			new google.maps.LatLng(-31, 137),
+			new google.maps.LatLng(-10, 155)
+		);
+		var lastValidCenter = soejs.map.getCenter();
+
+		google.maps.event.addListener(soejs.map, 'center_changed', function () {
+			if (allowedBounds.contains(soejs.map.getCenter())) {
+				// still within valid bounds, so save the last valid position
+				lastValidCenter = soejs.map.getCenter();
+				return;
+			}
+			// not valid anymore => return to last valid position
+			soejs.map.panTo(lastValidCenter);
+		});
+
+		google.maps.event.addListener(soejs.map, "maptypeid_changed", function () {
+			if (soejs.map.mapTypeId == "satellite" || soejs.map.mapTypeId == "hybrid") {
+				if (!soejs.showRegionColourFlag) {
+					soejs.map.controls[google.maps.ControlPosition.TOP_CENTER].push(soejs.colourControl);
+					soejs.showRegionColourFlag = true;
+				}
+			}
+			else {
+				soejs.map.controls[google.maps.ControlPosition.TOP_CENTER].pop(soejs.colourControl);
+				soejs.fillOpacity = 0.75;
+				soejs.showRegionColourFlag = false;
+			}
+			soejs.polygonArray.forEach(function (p) {
+				p.set("fillOpacity", soejs.fillOpacity);
+			});
+
+		});
+		
 	},//~ initialise
 
 	initialisePin: function () {
