@@ -209,14 +209,25 @@ Object.keys(subCatchments).forEach(function (k, i) {
 	var subCatchment = subCatchments[k];
 	var kebab = k.toKebabCase();
 	print(String.format(
-
-		"<div class=\"subregion-info subregion-{0} {2}\">\
-	<h4>Report card grades for {1}</h4>\
-	<div class=gauge-tooltip>\
-		<div id=gauge-{0}></div>\
-		<span class=\"tooltiptext tooltiptext-biodiversity\"><span class=\"tooltipgrade tooltipgrade-biodiversity\"></span><br><br>A: Very Good<br>B: Good<br>C: Poor<br>D: Very Poor</span>\
-	</div>\
-</div>"
+	
+		"<div id=gauge-{0} class=\"subregion-info subregion-{0} gauge-{0} {2}\">\
+		<h4>Report card grades for {1}</h4>\
+		<ul class=\"conditions-container\">\
+			<li>\
+				<div class=\"condition\">\
+					<h4>CONDITION</h4>\
+					<span class=\"rank letter\"></span>\
+					<span class=\"smaller\"></span>\
+				</div>\
+			</li>\
+			<li class=\"rankings\">\
+				<h4>Condition rankings:</h4>\
+				<ul>\
+				</ul>\
+				<p>See also: <a href=\"./?a=1434918\">Freshwater wetland ecosystems assessment summary</a>.</p>\
+			</li>\
+		</ul>\
+	</div>"
 
 		, kebab, k, i == 0 ? "" : "initial-hide"));
 
