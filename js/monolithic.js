@@ -492,8 +492,11 @@ var soejs = {
 				});
 
 			});
-
-	}
+		} else {
+			document.querySelectorAll("ul.regionlink-tabs li").forEach(function(li) {
+				li.classList.toggle("active");
+			});
+		}
 	},//~ initialise
 
 	initialisePin: function () {
