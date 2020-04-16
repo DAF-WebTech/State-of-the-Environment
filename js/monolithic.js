@@ -339,8 +339,8 @@ var soejs = {
 		return formattedData;
 	},
 
-	mapLoadError: function() {
-		document.querySelectorAll("ul.regionlink-tabs li").forEach(function(li) {
+	mapLoadError: function () {
+		document.querySelectorAll("ul.regionlink-tabs li").forEach(function (li) {
 			li.classList.toggle("active");
 		});
 		document.getElementById("regionmap").classList.add("inactive");
@@ -361,7 +361,7 @@ var soejs = {
 		// we found that occasionally, unreliably, and we couldn't reproduce it
 		// loading the charts library somehow knocked out google maps
 		// so we'll bypass all this code if it's not loaded
-		if (!google.maps) { 	
+		if (!google.maps) {
 			soejs.mapLoadError();
 			return;
 		}
@@ -501,12 +501,20 @@ var soejs = {
 			});
 
 		});
-		
+
 	},//~ initialise
 
 	initialisePin: function () {
 
 		soejs.selectFunction = soejs.selectPinRegion;
+
+		// we found that occasionally, unreliably, and we couldn't reproduce it
+		// loading the charts library somehow knocked out google maps
+		// so we'll bypass all this code if it's not loaded
+		if (!google.maps) {
+			soejs.mapLoadError();
+			return;
+		}
 
 		var infowindow = new google.maps.InfoWindow();
 		var centre_latlng = new google.maps.LatLng(-21, 146);
@@ -613,9 +621,9 @@ var soejs = {
 				soejs.polygonArray[i].set("fillColor", soejs.highlight_colour);
 			}
 			// special handling for GBR area for Water Quality Catchments. should also highlight smaller polygon under GBR for water quality catchments
-			if (soejs.polyFilter == "qld-water-quality-catchments-poly-v4.js" 
-					&& region_code == "region-great-barrier-reef-report-card" 
-					&& (GBR.indexOf(soejs.polygonArray[i].id) != -1)) {
+			if (soejs.polyFilter == "qld-water-quality-catchments-poly-v4.js"
+				&& region_code == "region-great-barrier-reef-report-card"
+				&& (GBR.indexOf(soejs.polygonArray[i].id) != -1)) {
 				soejs.polygonArray[i].set("fillColor", soejs.highlight_colour);
 			}
 
@@ -631,14 +639,19 @@ var soejs = {
 			soejs.showSelectedRegion(region_code);
 			soejs.showHideRegionInfo(region_code);
 		} else {
-			// find the polygon that matches the selected region
-			for (var i = 0; i < soejs.polygonArray.length; i++) {
-				if (soejs.polygonArray[i].id == region_code) {
-					var region_latlng = new google.maps.LatLng(soejs.polygonArray[i].regionlat, soejs.polygonArray[i].regionlong);
-					var mev = { stop: null, latLng: region_latlng }
-					google.maps.event.trigger(soejs.polygonArray[i], 'click', mev);
-					break;
+			if (google.maps) {
+
+				// find the polygon that matches the selected region
+				for (var i = 0; i < soejs.polygonArray.length; i++) {
+					if (soejs.polygonArray[i].id == region_code) {
+						var region_latlng = new google.maps.LatLng(soejs.polygonArray[i].regionlat, soejs.polygonArray[i].regionlong);
+						var mev = { stop: null, latLng: region_latlng }
+						google.maps.event.trigger(soejs.polygonArray[i], 'click', mev);
+						break;
+					}
 				}
+			} else {
+				soejs.showHideRegionInfo(region_code);
 			}
 		}
 	},//~selectPolyRegion
@@ -652,12 +665,17 @@ var soejs = {
 			soejs.map.fitBounds(soejs.map_bounds);
 			soejs.map.setZoom(5);
 		} else {
-			//  reset all the icons back to normal except the one you clicked
-			for (var i = 0; i < soejs.markers.length; i++) {
-				if (soejs.markers[i].id === region_code) {
-					google.maps.event.trigger(soejs.markers[i], 'click');
-					break;
+			if (google.maps) {
+				//  reset all the icons back to normal except the one you clicked
+				for (var i = 0; i < soejs.markers.length; i++) {
+					if (soejs.markers[i].id === region_code) {
+						google.maps.event.trigger(soejs.markers[i], 'click');
+						break;
+					}
 				}
+			}
+			else {
+				soejs.showHideRegionInfo(region_code);
 			}
 		}
 	},//~selectPinRegion
