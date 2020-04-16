@@ -245,8 +245,7 @@ Object.keys(subCatchments).forEach(function (k, i) {
 				element: "gauge-" + kebab,
 				theme: "biodiversity",
 				segments: 4,
-				grade: s.Grade,
-				label: s.Grade
+				grade: s.Grade
 			};
 			gauges.push(gauge)
 		}
