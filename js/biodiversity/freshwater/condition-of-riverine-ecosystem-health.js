@@ -99,7 +99,7 @@ Object.keys(data).forEach(function (k) {
 		gauges.push(gauge)
 	}
 
-	var heading = "Report card grades in " + k;
+	var heading = "Report card grades";
 
 	// now do charts/tables
 	if (k.indexOf("Healthy") == 0) {
@@ -251,7 +251,7 @@ Object.keys(subCatchments).forEach(function (k, i) {
 		}
 	});
 
-	var heading = "";//"Report card grades for " + k;
+	var heading = "";
 	var markup = String.format(templateSubCatchment, kebab, heading, ++counter, thead, tbody, "", i == 0 ? "" :"initial-hide");
 	print(markup);
 
