@@ -18,10 +18,10 @@ result.data.forEach(function (record) {
 });
 
 
-
+// i'm using template because i don't want it to show, and i was getting errors if i removed it
 var templateTableOnly = "\
 <div class=\"region-info region-{0}\" {6}>\
-	<h4>{1}</h4>\
+	<template>{1}</template>\
 	<div id=table_{2} class=\"responsive-table sticky\">\
 		<table class=\"indicators zebra\">\
 			<thead><tr>{3}\
@@ -32,7 +32,7 @@ var templateTableOnly = "\
 </div>";
 var templateChartAndTable = "\
 <div class=\"region-info region-{0}\" {6}>\
-	<h4>{1}</h4>\
+	<template>{1}</template>\
 	<ul class=chart-tabs data-index={2}>\
 	    <li class=active><span>Chart</span>\
 	    <li><span>Table</span>\
