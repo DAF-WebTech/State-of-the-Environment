@@ -20,42 +20,39 @@ result.data.forEach(function (record) {
 
 
 var templateTableOnly = "\
-<div class=\"region-info region-{0}\" {6}>\
-	<h4>{1}</h4>\
-	<div id=table_{2} class=\"responsive-table sticky\">\
+<div class=\"region-info region-{0}\" {5}>\
+	<div id=table_{1} class=\"responsive-table sticky\">\
 		<table class=\"indicators zebra\">\
-			<thead><tr>{3}\
-			<tbody>{4}\
-			{5}\
+			<thead><tr>{2}\
+			<tbody>{3}\
+			{4}\
 		</table>\
 	</div>\
 </div>";
 var templateChartAndTable = "\
-<div class=\"region-info region-{0}\" {6}>\
-	<h4>{1}</h4>\
-	<ul class=chart-tabs data-index={2}>\
+<div class=\"region-info region-{0}\" {5}>\
+	<ul class=chart-tabs data-index={1}>\
 	    <li class=active><span>Chart</span>\
 	    <li><span>Table</span>\
 	</ul>\
 	<div class=chart-table>\
-		<div id=chart_{2} class=chart></div>\
-		<div id=table_{2} class=\"responsive-table sticky inactive\">\
+		<div id=chart_{1} class=chart></div>\
+		<div id=table_{1} class=\"responsive-table sticky inactive\">\
 			<table class=\"indicators zebra\">\
-				<thead><tr>{3}\
-				<tbody>{4}\
-				{5}\
+				<thead><tr>{2}\
+				<tbody>{3}\
+				{4}\
 			</table>\
 		</div>\
 	</div>\
 </div>";
 // key:
 // {0} region, used for hide/show on map items
-// {1} heading
-// {2} 0-based index of chart/table div being added
-// {3} table head ths
-// {4} table body rows
-// {5} table footer often not used.
-// {6} extra region attribute
+// {1} 0-based index of chart/table div being added
+// {2} table head ths
+// {3} table body rows
+// {4} table footer often not used.
+// {5} extra region attribute
 
 
 
