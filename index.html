@@ -38,99 +38,103 @@
 	<script id=chartdata type=application/json> </script>
 	<script src=js/server-render.js> </script>
 	<script>
-		"use strict";
+"use strict";
 
 
-		var request = new XMLHttpRequest();
-		request.open("GET", "/data/indicator-5-1-0-4.csv", false);  // `false` makes the request synchronous
-		request.send(null);
-		var csv = "";
-		if (request.status === 200) {
-			csv = request.responseText;
-		}
+var request = new XMLHttpRequest();
+request.open("GET", "/data/indicator-3-4-0-4.csv", false);  // `false` makes the request synchronous
+request.send(null);
+var csv = "";
+if (request.status === 200) {
+	csv = request.responseText;
+}
 
 
-		//%%% start matrix server side %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-		////      var csv = '%frontend_asset_metadata_data-file^as_asset:asset_file_contents^replace:\r\n:\\n%';
+//%%% start matrix server side %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+////      var csv = '%frontend_asset_metadata_data-file^as_asset:asset_file_contents^replace:\r\n:\\n%';
 
-		var results = Papa.parse(
-			csv,
-			{
-				skipEmptyLines: true,
-				dynamicTyping: true
-			}
-		);
+var results = Papa.parse(
+	csv,
+	{
+		skipEmptyLines: true,
+		dynamicTyping: true,
+		header: true
+	}
+);
 
-		var dataHead = results.data.shift();
-		var data = results.data;
+var years = results.meta.fields.slice(1);
+var latestYear = years[years.length - 1];
+var totalRow = results.data.pop();
+var index = 0;
 
-		///////////////////////////////////////////////////
-		var arrayTable =  [ ["Year"].concat(dataHead.slice(2))];
-		data.filter(function(d) {
-			return d[0] == "Peak";
-		}).forEach(function(d) {
-			arrayTable.push(d.slice(1));
+/////////////////////////////////////////// 1. pie
+
+var pie1 = { 
+	heading: "Proportion of Queensland’s agriculture emissions by category, " + latestYear,
+	kebab: "queensland",
+	headings: ["Category", "Emissions (million tonnes)"],
+	rows: results.data.map(function(d) { 
+		return [d.Category, d[latestYear].toFixed(3)];
+	}),
+	footer: [totalRow.Category, totalRow[latestYear]]
+};
+
+
+var chart1 = [[{label: "Category"}, {label: "Emissions (million tonnes)"}]];
+pie1.rows.forEach(function(d) { 
+		chart1.push([d[0], Number(d[1])]); 
+});
+var chartData = [{data: chart1, type: "pie", options: getDefaultPieChartOptions()}];
+
+
+/////////////////////////////////////////// 2. line
+
+var line2rows = [years];
+results.data.map(function(d) { 
+		var ret = [];
+		years.forEach(function(y) {
+			ret.push(d[y] ? d[y].toFixed(3) : "0" );
 		});
-		arrayTable[2][0] = "Off-Peak";
+		line2rows.push(ret);
+	});
+	line2rows = line2rows.transpose();
 
-		var heading = "Percentage of network with good travel time reliability";
-		var index = 0;
-		var region = "queensland";
+var line2 = { 
+	heading: "Trends in Queensland’s agriculture emissions, by category",
+	kebab: "queensland",
+	headings: ["Year"].concat(results.data.map(function(d) { return d.Category} )),
+	rows: line2rows
+};
 
-		arrayTable = arrayTable.transpose();
-		var htmlTable = tableToHtml(arrayTable, false)
-		print(String.format(regionInfoTemplate, region, heading, index++, htmlTable.thead, htmlTable.tbody));
+//[{label: "Category"}, {label: "Emissions (million tonnes)"}]
+var chart2 = line2rows.map(function(row) { 
+	return row.map(function(d, i) { return i == 0 ?  d : Number(d) }); 	
+});
 
-		var chartOptions = getDefaultLineChartOptions();
-		chartOptions.vAxis.title = "Percentage";
-		var chartData = [{ type: "line", options: chartOptions, data: arrayTable }];
+chart2.unshift(line2.headings);
+
+var lineChartOptions = getDefaultLineChartOptions();
+lineChartOptions.vAxis.title = "Tonnes (million)";
+chartData.push({data: chart2, type: "line", options: lineChartOptions});
 
 
-		//////////////////////////////////////////////////////////
-		// millions of trips by transport mode, data not supplied in 2020
-/*		arrayTable = [["Quarter"]];
-		var numberTripsIndex = [];
-		data.forEach(function (d, i) {
-			if (d[0] == "Number of trips") {
-				arrayTable.push([d[1]]);
-				numberTripsIndex.push(i);
-			}
-		});
-		for (var i = qFirstIndex; i < dataHead.length; ++i) {
-			arrayTable[0].push(dataHead[i]);
+/////////////////////////////////////////// 3. table
 
-			numberTripsIndex.forEach(function (j) {
-				arrayTable[j - 2].push(data[j][i]);
-			});
+var table3 = { 
+	heading: "Queensland’s total agriculture emissions",
+	kebab: "queensland",
+	headings: ["Year", "Emissions (million tonnes)"],
+	rows: years.map(function(y) {
+		return [y, totalRow[y].toFixed(3)]
+	}),
+	 hasNoChart: true
+};
 
-		}
+var regions = {regions: [ pie1, line2, table3 ] };
 
-		heading = "Millions of Trips by Public Transport Mode in SEQ";
-		htmlTable = tableToHtml(arrayTable, false, Number.prototype.toFixed, [2])
-		print(String.format(regionInfoTemplate, region, heading, index++, htmlTable.thead, htmlTable.tbody));
+var template = Handlebars.compile(chartTableTemplate);
+print(template(regions));
 
-		var chart2 = arrayTable.transpose();
-		chartOptions = getDefaultColumnChartOptions();
-		chartOptions.vAxis.title = "Trips (millions)";
-		chartData.push({ type: "column", options: chartOptions, data: chart2 });
-
-*/
-		//////////////////////////////////////////////////////////////
-
-		arrayTable =  [["Year"].concat(dataHead.slice(6))];
-		data.filter(function(d) {
-			return d[0] == "Reliability";
-		}).forEach(function(d) {
-			arrayTable.push([d[1]].concat(d.slice(6)));
-		});
-
-		heading = "On-Time Running by Public Transport Mode in SEQ — % of Trips";
-
-		arrayTable = arrayTable.transpose();
-		var htmlTable = tableToHtml(arrayTable, false)
-		print(String.format(regionInfoTemplate, region, heading, index++, htmlTable.thead, htmlTable.tbody));
-
-		chartData.push({ type: "line", options: chartOptions, data: arrayTable });
 
 
 
@@ -140,7 +144,7 @@
 
 
 
-		document.getElementById("chartdata").textContent = JSON.stringify(tables);
+//		document.getElementById("chartdata").textContent = JSON.stringify(tables);
 //////////////////////////////////////////////////////////////////////////////////////
 
 	</script>

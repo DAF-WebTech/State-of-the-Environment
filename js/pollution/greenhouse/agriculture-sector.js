@@ -1,82 +1,96 @@
 var csv = '%frontend_asset_metadata_data-file^as_asset:asset_file_contents^replace:\r\n:\\n%';
 
-
 var results = Papa.parse(
 	csv,
 	{
 		skipEmptyLines: true,
 		dynamicTyping: true,
+		header: true
 	}
 );
-var headRow = results.data.shift().map(function (th) { return th.toString(); });
+
+// pull out some meta info
+var years = results.meta.fields.slice(1);
+var latestYear = years[years.length - 1];
 var totalRow = results.data.pop();
-
-console.log("data from papaparse", results);
-
 var index = 0;
 
-///////////////////////////////////////////////////
+/////////////////////////////////////////// 1. pie
 
-var tableData = results.data.map(function (record) {
-	return [record[0], record[record.length - 1]];
+var pie1 = {
+	heading: "Proportion of Queensland’s agriculture emissions by category, " + latestYear,
+	kebab: "queensland",
+	headings: ["Category", "Emissions (million tonnes)"],
+	
+	// the latest year value for each category	
+	rows: results.data.map(function (d) {
+		return [d.Category, d[latestYear].toFixed(3)];
+	}),
+	footer: [totalRow.Category, totalRow[latestYear]]
+};
+
+// chart heading
+var chart1 = [[{ label: "Category" }, { label: "Emissions (million tonnes)" }]]; 
+// convert the string representation in the table back to Number type
+pie1.rows.forEach(function (d) {
+	chart1.push([d[0], Number(d[1])]);
 });
-
-tableData.sort(function (a, b) {
-	return a[1] < b[1] ? 1 : -1;
-});
-
-var head = ["Category", "Emissions (million tonnes)"];
-tableData.unshift(head);
-
-var options = getDefaultPieChartOptions();
-options.sliceVisibilityThreshold = 0;
+var chartData = [{ data: chart1, type: "pie", options: getDefaultPieChartOptions() }];
 
 
-var tables = [{
-	rows: tableData,
-	type: "pie",
-	options: options,
-	heading: "Proportion of Queensland’s agriculture emissions by category, " + headRow[headRow.length - 1],
-	hasChart: true,
-	index: index++
-}];
+/////////////////////////////////////////// 2. line
 
-
-//////////////////////////////////////////////////////////////////////////////////////
-
-var chart = results.data;
-chart.unshift(headRow);
-chart = chart.transpose();
-
-options = getDefaultLineChartOptions();
-options.vAxis.title = "Tonnes (millions)";
-
-
-tables.push({
-	rows: chart,
-	heading: "Trends in Queensland’s agriculture emissions, by category",
-	hasChart: true,
-	index: index++,
-	type: "line",
-	options: options,
-});
-
-
-//////////////////////////////////////////////
-var data = totalRow.slice(1).map(function (row, i) {
-	return [headRow[i + 1], row];
-});
-data.unshift(["Year", "Emissions (million tonnes)"]);
-
-tables.push(
-	{
-		rows: data,
-		heading: "Queensland’s total agriculture emissions",
-		hasChart: false,
-		index: index++
+// build a table directly from the data, but it will need to be transposed
+// first row (ie column after transposition) is the year names
+var line2rows = [years];
+// papaparse converted each row to an object keyed by year, so we conver that back to an array
+results.data.map(function (d) {
+	var ret = [];
+	years.forEach(function (y) {
+		ret.push(d[y] ? d[y].toFixed(3) : "0");
 	});
+	line2rows.push(ret);
+});
+line2rows = line2rows.transpose();
+
+var line2 = {
+	heading: "Trends in Queensland’s agriculture emissions, by category",
+	kebab: "queensland",
+	headings: ["Year"].concat(results.data.map(function (d) { return d.Category })),
+	rows: line2rows
+};
+
+// convert the formatted string for each value back to a Number type
+var chart2 = line2rows.map(function (row) {
+	return row.map(function (d, i) { return i == 0 ? d : Number(d) });
+});
+
+// add the table's headings to the top of the chart data array
+chart2.unshift(line2.headings);
+
+var lineChartOptions = getDefaultLineChartOptions();
+lineChartOptions.vAxis.title = "Tonnes (million)";
+chartData.push({ data: chart2, type: "line", options: lineChartOptions });
+
+
+/////////////////////////////////////////// 3. table
+
+var table3 = {
+	heading: "Queensland’s total agriculture emissions",
+	kebab: "queensland",
+	headings: ["Year", "Emissions (million tonnes)"],
+	// this data is the year and the value in the Total row
+	rows: years.map(function (y) {
+		return [y, totalRow[y].toFixed(3)]
+	}),
+	hasNoChart: true
+};
+
+var regions = { regions: [pie1, line2, table3] };
+
+var template = Handlebars.compile(chartTableTemplate);
+print(template(regions));
 
 
 
-
-print("<script id=tabledata type=application/json>" + JSON.stringify(tables) + "</" + "script>");
+print("<script id=chartdata type=application/json>" + JSON.stringify(chartData) + "</" + "script>");
