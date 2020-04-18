@@ -290,7 +290,7 @@ var chartTableTemplate = " \
 		{{#unless region.hasNoChart}} \
 		<div id=chart_{{@index}} class=chart></div> \
 		{{/unless}} \
-		<div id=table_{{@index}} class=\"responsive-table sticky inactive\"> \
+		<div id=table_{{@index}} class=\"responsive-table sticky {{#unless region.hasNoChart}inactive{{/unless}}\"> \
 			<table class=\"indicators zebra\"> \
 				<thead><tr>{{#each region.headings}}<th scope=col {{#unless @first}}class=num{{/unless}}>{{this}}{{/each}}</tr> \
 				<tbody>{{#each region.rows}} \
